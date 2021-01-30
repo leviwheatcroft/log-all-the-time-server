@@ -1,8 +1,9 @@
 const { resolvers } = require('./resolvers')
 const { typeDefs } = require('./typeDefs')
-// see envoy, I think this needs to be done with middlewares
+const { middlewares } = require('./middlewares')
 
 module.exports = {
   resolvers,
-  typeDefs
+  typeDefs,
+  middlewares
 }

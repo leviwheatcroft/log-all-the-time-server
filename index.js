@@ -1,16 +1,22 @@
 require('dotenv-flow').config()
 const { ApolloServer } = require('apollo-server')
+const { makeExecutableSchema } = require('@graphql-tools/schema')
+const { applyMiddleware } = require('graphql-middleware')
 const {
   connect: dbConnect
 } = require('./db')
 const {
   resolvers,
-  typeDefs
+  typeDefs,
+  middlewares
 } = require('./gql')
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
-const server = new ApolloServer({ typeDefs, resolvers })
+const schema = applyMiddleware(
+  makeExecutableSchema({ typeDefs, resolvers }),
+  ...middlewares
+)
+
+const server = new ApolloServer({ schema })
 
 Promise.all([server.listen(), dbConnect()]).then(([{ url }]) => {
   console.info(`🚀  Server ready at ${url}`)
