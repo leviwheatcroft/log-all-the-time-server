@@ -45,11 +45,14 @@ const userSchema = new mongoose.Schema({
  */
 userSchema.pre('save', function save (next) {
   const user = this
-  if (!user.isModified('password')) { return next() }
+  if (!user.isModified('password'))
+    return next()
   bcrypt.genSalt(10, (err, salt) => {
-    if (err) { return next(err) }
+    if (err)
+      return next(err)
     bcrypt.hash(user.password, salt, (err, hash) => {
-      if (err) { return next(err) }
+      if (err)
+        return next(err)
       user.password = hash
       next()
     })
@@ -71,12 +74,11 @@ userSchema.methods.comparePassword = function comparePassword (
  * Helper method for getting user's gravatar.
  */
 userSchema.methods.gravatar = function gravatar (size) {
-  if (!size) {
+  if (!size)
     size = 200
-  }
-  if (!this.email) {
+  if (!this.email)
     return `https://gravatar.com/avatar/?s=${size}&d=retro`
-  }
+
   const md5 = crypto.createHash('md5').update(this.email).digest('hex')
   return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`
 }

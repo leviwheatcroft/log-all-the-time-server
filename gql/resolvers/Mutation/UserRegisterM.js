@@ -28,8 +28,14 @@ const UserRegisterM = createResolver(
     if (user) {
       Object.assign(user, { username, password, active })
     } else {
-      user = new User({ username, password, email, active })
+      user = new User({
+        username,
+        password,
+        email,
+        active
+      })
     }
+
     await user.save()
 
     return true
