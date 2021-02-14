@@ -1,11 +1,7 @@
 const jwt = require('jsonwebtoken')
 const {
-  undefined: isUndefined
-} = require('check-types')
-const {
-  AUTH_FAILED,
-  AUTH_ACCESS_TIMEOUT,
-  RANGE_ERROR
+  AuthFailedError,
+  AuthAccessTimeoutError
 } = require('../../lib/errors')
 const { authWhitelist } = require('./authWhitelist')
 
@@ -20,10 +16,8 @@ async function authentication (resolve, root, args, ctx, info) {
   } = ctx
   if (!authWhitelist.includes(fieldName)) {
     const authorizationHeader = req.get('authorization')
-    if (isUndefined(authorizationHeader))
-      throw new RANGE_ERROR()
-    if (isUndefined(JWT_SECRET))
-      throw new RANGE_ERROR()
+    if (!authorizationHeader)
+      throw new AuthFailedError('No authorization header provided.')
 
     let token
     try {
@@ -32,13 +26,15 @@ async function authentication (resolve, root, args, ctx, info) {
         JWT_SECRET
       )
     } catch (err) {
-      throw new AUTH_FAILED({ internalData: { jwt } })
+      throw new AuthFailedError('Malformed token.')
     }
+
+    token.expiresAt = Date.parse(token.expiresAt)
 
     ctx.jwt = token
 
     if (ctx.jwt.expiresAt < Date.now())
-      throw new AUTH_ACCESS_TIMEOUT()
+      throw new AuthAccessTimeoutError('Access token has timed out.')
   }
 
   const result = await resolve(root, args, ctx, info)

@@ -11,8 +11,13 @@ type Mutation {
     password: String!
   ): Tokens!
   UserRefreshM(
-    email: String!
-  ): Tokens!
+    refreshToken: String!
+  ): Token!,
+  EntryNewM(
+    date: Date!
+    project: String!
+    description: String!
+  ): Boolean
 }
 `
 

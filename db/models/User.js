@@ -21,9 +21,9 @@ const userSchema = new mongoose.Schema({
     default () {
       return this.email.match(/^\w+/)[0]
     }
-  }
-  // basicGrant: { type: Boolean, default: true },
-  // adminGrant: { type: Boolean, default: false },
+  },
+  basicGrant: { type: Boolean, default: true },
+  adminGrant: { type: Boolean, default: false }
   // organisation: { type: ObjectId, ref: 'Organisation' },
   // tokens: Array,
   // branch: String,

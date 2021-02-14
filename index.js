@@ -16,7 +16,16 @@ const schema = applyMiddleware(
   ...middlewares
 )
 
-const server = new ApolloServer({ schema })
+function context ({ req }) {
+  return { req }
+}
+
+function formatError (error) {
+  console.log(error)
+  return error
+}
+
+const server = new ApolloServer({ schema, context, formatError })
 
 Promise.all([server.listen(), dbConnect()]).then(([{ url }]) => {
   console.info(`🚀  Server ready at ${url}`)
