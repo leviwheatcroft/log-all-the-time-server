@@ -10,20 +10,26 @@ const { Entry } = require('../../../db')
 const EntryNewM = createResolver(
   async (root, query, ctx) => {
     const {
+      raw,
       date,
-      project,
-      description
-    } = query
+      timeStart,
+      timeEnd,
+      duration,
+      tags
+    } = query.entry
 
     const entry = new Entry({
+      raw,
       date,
-      project,
-      description
+      timeStart,
+      timeEnd,
+      duration,
+      tags
     })
 
     await entry.save()
 
-    return true
+    return entry
   }
 )
 

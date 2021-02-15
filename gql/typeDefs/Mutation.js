@@ -14,10 +14,8 @@ type Mutation {
     refreshToken: String!
   ): Token!,
   EntryNewM(
-    date: Date!
-    project: String!
-    description: String!
-  ): Boolean
+    entry: EntryI!
+  ): Entry
 }
 `
 
