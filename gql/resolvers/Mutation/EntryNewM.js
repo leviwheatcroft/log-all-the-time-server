@@ -13,6 +13,7 @@ const EntryNewM = createResolver(
   async (root, query, ctx) => {
     const {
       raw,
+      description,
       date,
       timeStart,
       timeEnd,
@@ -39,6 +40,7 @@ const EntryNewM = createResolver(
 
     const entry = new Entry({
       raw,
+      description,
       date,
       timeStart,
       timeEnd,
