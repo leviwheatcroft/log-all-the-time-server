@@ -8,8 +8,13 @@ const { Entry } = require('../../../db')
 const EntryQ = createResolver(
   async (root, query, ctx) => {
     // const _id = query._id || ctx.jwt.userId
-    const entries = await Entry.find({})
-    console.log(entries)
+    const entries = await Entry.find(
+      {},
+      null,
+      {
+        populate: 'tags'
+      }
+    )
     return entries
   }
 )

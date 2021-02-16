@@ -4,11 +4,12 @@ const Entry = gql`
 type Entry {
   id: ObjectId
   raw: String
+  description: String
   date: Date
   timeStart: String
   timeEnd: String
   duration: Int
-  tags: [String]
+  tags: [Tag]
 }
 `
 
@@ -16,6 +17,7 @@ const EntryI = gql`
 input EntryI {
   id: ObjectId
   raw: String
+  description: String
   date: Date
   timeStart: String
   timeEnd: String

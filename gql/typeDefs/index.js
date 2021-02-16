@@ -5,6 +5,7 @@ const { Token } = require('./Token')
 const { Tokens } = require('./Tokens')
 const { Scalars } = require('./Scalars')
 const { Entry, EntryI } = require('./Entry')
+const { Tag } = require('./Tag')
 
 const typeDefs = [
   Mutation,
@@ -14,7 +15,8 @@ const typeDefs = [
   Tokens,
   Scalars,
   Entry,
-  EntryI
+  EntryI,
+  Tag
 ]
 
 module.exports = {
