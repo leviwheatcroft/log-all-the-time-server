@@ -17,7 +17,7 @@ const EntryQ = createResolver(
       {
         populate: 'tags',
         limit,
-        sort: { updatedAt: 'desc' }
+        sort: { createdAt: 'desc' }
       }
     )
     return entries
