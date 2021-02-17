@@ -13,7 +13,10 @@ type Mutation {
   UserRefreshM(
     refreshToken: String!
   ): Token!,
-  EntryUpsertM(
+  EntryUpdateM(
+    entry: EntryI!
+  ): Entry!
+  EntryAddM(
     entry: EntryI!
   ): Entry!
 }

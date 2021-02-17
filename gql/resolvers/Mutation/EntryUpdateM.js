@@ -9,7 +9,7 @@ const { default: asyncPool } = require('tiny-async-pool')
 const { Entry } = require('../../../db')
 const { Tag } = require('../../../db')
 
-const EntryUpsertM = createResolver(
+const EntryUpdateM = createResolver(
   async (root, query, ctx) => {
     const {
       id,
@@ -40,27 +40,11 @@ const EntryUpsertM = createResolver(
       tags[idx] = result
     })
 
-    let entry
-    if (id) {
-      entry = await Entry.findOneAndUpdate(
-        {
-          _id: id
-        },
-        {
-          raw,
-          description,
-          date,
-          timeStart,
-          timeEnd,
-          duration,
-          tags
-        },
-        {
-          new: true
-        }
-      ).exec()
-    } else {
-      entry = new Entry({
+    const entry = await Entry.findOneAndUpdate(
+      {
+        _id: id
+      },
+      {
         raw,
         description,
         date,
@@ -68,16 +52,18 @@ const EntryUpsertM = createResolver(
         timeEnd,
         duration,
         tags
-      })
-      await entry.save()
-      // populating a saved doc is complicated!
-      // this would query the db again:
-      // await Entry.populate(entry, 'tags')
-      // in this case we already have tags so we can do some entry.toObject
-      // magic
-      // this kind of thing won't work:
-      // entry.set('tags', tags)
-    }
+      },
+      {
+        new: true
+      }
+    ).exec()
+    // populating a saved doc is complicated!
+    // this would query the db again:
+    // await Entry.populate(entry, 'tags')
+    // in this case we already have tags so we can do some entry.toObject
+    // magic
+    // this kind of thing won't work:
+    // entry.set('tags', tags)
 
     return {
       ...entry.toObject(),
@@ -88,6 +74,6 @@ const EntryUpsertM = createResolver(
 
 module.exports = {
   Mutation: {
-    EntryUpsertM
+    EntryUpdateM
   }
 }
