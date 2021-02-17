@@ -9,9 +9,10 @@ const { default: asyncPool } = require('tiny-async-pool')
 const { Entry } = require('../../../db')
 const { Tag } = require('../../../db')
 
-const EntryNewM = createResolver(
+const EntryUpsertM = createResolver(
   async (root, query, ctx) => {
     const {
+      id,
       raw,
       description,
       date,
@@ -38,17 +39,37 @@ const EntryNewM = createResolver(
       tags[idx] = result
     })
 
-    const entry = new Entry({
-      raw,
-      description,
-      date,
-      timeStart,
-      timeEnd,
-      duration,
-      tags
-    })
-
-    await entry.save()
+    let entry
+    if (id) {
+      entry = await Entry.findOneAndUpdate(
+        {
+          _id: id
+        },
+        {
+          raw,
+          description,
+          date,
+          timeStart,
+          timeEnd,
+          duration,
+          tags
+        },
+        {
+          new: true
+        }
+      ).exec()
+    } else {
+      entry = new Entry({
+        raw,
+        description,
+        date,
+        timeStart,
+        timeEnd,
+        duration,
+        tags
+      })
+      await entry.save()
+    }
 
     return entry
   }
@@ -56,6 +77,6 @@ const EntryNewM = createResolver(
 
 module.exports = {
   Mutation: {
-    EntryNewM
+    EntryUpsertM
   }
 }

@@ -13,9 +13,9 @@ type Mutation {
   UserRefreshM(
     refreshToken: String!
   ): Token!,
-  EntryNewM(
+  EntryUpsertM(
     entry: EntryI!
-  ): Entry
+  ): Entry!
 }
 `
 
