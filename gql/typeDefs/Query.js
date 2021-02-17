@@ -6,6 +6,12 @@ type Query {
   EntryQ(
     limit: Int
   ): [Entry]!
+  EntryFilterQ(
+    limit: Int
+    dateFrom: Date
+    dateTo: Date
+    tags: String
+  ): [Entry]!
 }
 `
 
