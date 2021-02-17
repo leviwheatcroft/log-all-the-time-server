@@ -33,7 +33,8 @@ const EntryUpsertM = createResolver(
           tag
         },
         {
-          upsert: true
+          upsert: true,
+          new: true
         }
       ).exec()
       tags[idx] = result
@@ -69,9 +70,19 @@ const EntryUpsertM = createResolver(
         tags
       })
       await entry.save()
+      // populating a saved doc is complicated!
+      // this would query the db again:
+      // await Entry.populate(entry, 'tags')
+      // in this case we already have tags so we can do some entry.toObject
+      // magic
+      // this kind of thing won't work:
+      // entry.set('tags', tags)
     }
 
-    return entry
+    return {
+      ...entry.toObject(),
+      tags: tags.map((tag) => tag.toObject())
+    }
   }
 )
 
