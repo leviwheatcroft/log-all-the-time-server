@@ -7,12 +7,17 @@ const { Entry } = require('../../../db')
 
 const EntryQ = createResolver(
   async (root, query, ctx) => {
+    const {
+      limit = 20
+    } = query
     // const _id = query._id || ctx.jwt.userId
     const entries = await Entry.find(
       {},
       null,
       {
-        populate: 'tags'
+        populate: 'tags',
+        limit,
+        sort: { updatedAt: 'desc' }
       }
     )
     return entries
