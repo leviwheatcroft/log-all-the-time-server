@@ -1,11 +1,12 @@
 const {
   createResolver
 } = require('apollo-resolvers')
+// eslint-disable-next-line no-unused-vars
+const dbg = require('debug')('tl')
+const { default: asyncPool } = require('tiny-async-pool')
 const {
   Tag
 } = require('../../../db')
-// eslint-disable-next-line no-unused-vars
-const dbg = require('debug')('tl')
 const { Entry } = require('../../../db')
 
 const EntryFilterQ = createResolver(
@@ -13,17 +14,21 @@ const EntryFilterQ = createResolver(
     const {
       limit = 20,
       dateFrom,
-      dateTo
-    } = query
-    let {
+      dateTo,
       tags
     } = query
-    // const _id = query._id || ctx.jwt.userId
+
+    const tagIds = []
     if (tags) {
-      tags = await Tag.findOne({
-        tag: tags
-      }).exec()
+      await asyncPool(6, tags, async (tag) => {
+        const result = await Tag.findOne({
+          tag: tags
+        }).exec()
+        if (result)
+          tagIds.push(result._id)
+      })
     }
+
     const entries = await Entry.find(
       {
         ...dateFrom || dateTo ? {
@@ -32,7 +37,7 @@ const EntryFilterQ = createResolver(
             ...dateTo ? { $lte: dateTo } : {}
           }
         } : {},
-        ...tags ? { tags: tags._id } : {}
+        ...tagIds.length ? { tags: { $in: tagIds } } : {}
       },
       null,
       {
