@@ -12,6 +12,9 @@ type Query {
     dateTo: Date
     tags: String
   ): [Entry]!
+  TagPartialQ(
+    tagPartial: String
+  ): [Tag]!
 }
 `
 
