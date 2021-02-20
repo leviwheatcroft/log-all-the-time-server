@@ -19,10 +19,10 @@ const EntryFilterQ = createResolver(
     } = query
 
     const tagIds = []
-    if (tags) {
+    if (tags && tags.length) {
       await asyncPool(6, tags, async (tag) => {
         const result = await Tag.findOne({
-          tag: tags
+          tag
         }).exec()
         if (result)
           tagIds.push(result._id)
@@ -37,7 +37,7 @@ const EntryFilterQ = createResolver(
             ...dateTo ? { $lte: dateTo } : {}
           }
         } : {},
-        ...tagIds.length ? { tags: { $in: tagIds } } : {}
+        ...tagIds.length ? { tags: { $all: tagIds } } : {}
       },
       null,
       {
