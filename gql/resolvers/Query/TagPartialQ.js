@@ -16,7 +16,7 @@ const TagPartialQ = createResolver(
 
     let tags = await Tag.find(
       {
-        tag: { $regex: regExp }
+        tagName: { $regex: regExp }
       },
       null,
       {

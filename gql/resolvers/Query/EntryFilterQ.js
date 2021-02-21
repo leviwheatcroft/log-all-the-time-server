@@ -20,9 +20,9 @@ const EntryFilterQ = createResolver(
 
     const tagIds = []
     if (tags && tags.length) {
-      await asyncPool(6, tags, async (tag) => {
+      await asyncPool(6, tags, async (tagName) => {
         const result = await Tag.findOne({
-          tag
+          tagName
         }).exec()
         if (result)
           tagIds.push(result._id)

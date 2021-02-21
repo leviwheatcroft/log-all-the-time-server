@@ -22,7 +22,7 @@ input EntryI {
   timeStart: String
   timeEnd: String
   duration: Int
-  tags: [String]
+  tagNames: [String]
 }
 `
 

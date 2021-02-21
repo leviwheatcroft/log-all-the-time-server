@@ -8,7 +8,7 @@ const tagSchema = new mongoose.Schema(
       type: ObjectId,
       auto: true
     },
-    tag: String
+    tagName: String
   },
   {
     timestamps: true,

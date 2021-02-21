@@ -23,13 +23,13 @@ const EntryAddM = createResolver(
 
     const _tags = tags.map((tag, idx) => [tag, idx])
 
-    await asyncPool(6, _tags, async ([tag, idx]) => {
+    await asyncPool(6, _tags, async ([tagName, idx]) => {
       const result = await Tag.findOneAndUpdate(
         {
-          tag
+          tagName
         },
         {
-          tag
+          tagName
         },
         {
           upsert: true,
