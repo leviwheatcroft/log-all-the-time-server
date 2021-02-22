@@ -10,7 +10,7 @@ type Query {
     limit: Int
     dateFrom: Date
     dateTo: Date
-    tags: [String]
+    tags: [ObjectId]
   ): [Entry]!
   TagPartialQ(
     tagPartial: String

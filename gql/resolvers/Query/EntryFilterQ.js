@@ -3,10 +3,10 @@ const {
 } = require('apollo-resolvers')
 // eslint-disable-next-line no-unused-vars
 const dbg = require('debug')('tl')
-const { default: asyncPool } = require('tiny-async-pool')
-const {
-  Tag
-} = require('../../../db')
+// const { default: asyncPool } = require('tiny-async-pool')
+// const {
+//   Tag
+// } = require('../../../db')
 const { Entry } = require('../../../db')
 
 const EntryFilterQ = createResolver(
@@ -18,27 +18,29 @@ const EntryFilterQ = createResolver(
       tags
     } = query
 
-    const tagIds = []
-    if (tags && tags.length) {
-      await asyncPool(6, tags, async (tagName) => {
-        const result = await Tag.findOne({
-          tagName
-        }).exec()
-        if (result)
-          tagIds.push(result._id)
-      })
+    // const tagIds = []
+    // if (tags && tags.length) {
+    //   await asyncPool(6, tags, async (tagName) => {
+    //     const result = await Tag.findOne({
+    //       tagName
+    //     }).exec()
+    //     if (result)
+    //       tagIds.push(result._id)
+    //   })
+    // }
+
+    const filter = {
+      ...dateFrom || dateTo ? {
+        date: {
+          ...dateFrom ? { $gte: dateFrom } : {},
+          ...dateTo ? { $lte: dateTo } : {}
+        }
+      } : {},
+      ...tags.length ? { tags: { $all: tags } } : {}
     }
 
     const entries = await Entry.find(
-      {
-        ...dateFrom || dateTo ? {
-          date: {
-            ...dateFrom ? { $gte: dateFrom } : {},
-            ...dateTo ? { $lte: dateTo } : {}
-          }
-        } : {},
-        ...tagIds.length ? { tags: { $all: tagIds } } : {}
-      },
+      filter,
       null,
       {
         populate: 'tags',
