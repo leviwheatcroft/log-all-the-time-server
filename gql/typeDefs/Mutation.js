@@ -19,6 +19,9 @@ type Mutation {
   EntryAddM(
     entry: EntryI!
   ): Entry!
+  EntryUpsertM(
+    entry: EntryI!
+  ): Entry!
 }
 `
 

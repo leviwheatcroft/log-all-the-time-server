@@ -22,6 +22,10 @@ function context ({ req }) {
 
 function formatError (error) {
   console.log(error)
+  if (error.extensions.code === 'AUTH_ACCESS_TIMEOUT')
+    return error
+  if (error.extensions && error.extensions.exception)
+    console.log(error.extensions.exception.stacktrace)
   return error
 }
 

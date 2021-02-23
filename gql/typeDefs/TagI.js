@@ -1,12 +1,12 @@
 const gql = require('graphql-tag')
 
-const Tag = gql`
-type Tag {
-  id: ObjectId!
+const TagI = gql`
+input TagI {
+  id: ObjectId
   tagName: String!
 }
 `
 
 module.exports = {
-  Tag
+  TagI
 }

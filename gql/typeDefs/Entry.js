@@ -13,20 +13,6 @@ type Entry {
 }
 `
 
-const EntryI = gql`
-input EntryI {
-  id: ObjectId
-  raw: String
-  description: String
-  date: Date
-  timeStart: String
-  timeEnd: String
-  duration: Int
-  tagNames: [String]
-}
-`
-
 module.exports = {
-  Entry,
-  EntryI
+  Entry
 }

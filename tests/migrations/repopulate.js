@@ -40,15 +40,19 @@ async function repopulate () {
 
   const entryCount = process.argv[3] || 24
 
-  const day = (5 * 24 * 60 * 60 * 1000)
-  const dateStart = Date.now() - (day * 5)
-  const dateRange = day * 10
+  const day = (24 * 60 * 60 * 1000)
+  const midnight = new Date()
+  midnight.setHours(0, 0, 0, 0)
+  const dateStart = midnight.valueOf() - (day * 5)
+  const dateRange = 10 // days
   const tagSetA = randomWords(10)
   const tagSetB = randomWords(4)
 
   function date () {
-    const modifier = Math.floor(Math.random() * dateRange)
-    return new Date(dateStart + modifier)
+    const modifier = Math.floor(Math.random() * dateRange) * day
+    const date = new Date(dateStart + modifier)
+
+    return date
   }
   function tags () {
     const idxA = Math.floor(Math.random() * tagSetA.length)
