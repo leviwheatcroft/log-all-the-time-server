@@ -13,24 +13,24 @@ const EntryUpsertM = createResolver(
   async (root, query, ctx) => {
     const {
       id,
-      raw,
-      description,
       date,
-      timeStart,
-      timeEnd,
       duration,
+      description,
       tags
     } = query.entry
 
+    // managing tags here is a little strange.
+    // we need tag.id for all tags, and a plain object like { id, tagName }
+    // but we don't actually need the tag documents.
+    // `tags` contains the plain objects (not documents), asyncPool here
+    // populates tags.id
+
     await asyncPool(6, tags, async (tag) => {
-      if (tag.id)
-        return
-      const {
-        tagName
-      } = tag
-      const newTag = new Tag({ tagName })
-      await newTag.save()
-      tag.id = newTag.id
+      if (!tag.id) {
+        const newTag = new Tag({ tagName: tag.tagName })
+        await newTag.save()
+        tag.id = newTag.id
+      }
     })
 
     let entry
@@ -43,7 +43,7 @@ const EntryUpsertM = createResolver(
           description,
           date,
           duration,
-          tags
+          tags: tags.map(({ id }) => id)
         },
         {
           new: true
@@ -54,7 +54,7 @@ const EntryUpsertM = createResolver(
         date,
         description,
         duration,
-        tags
+        tags: tags.map(({ id }) => id)
       })
       await entry.save()
     }
@@ -67,7 +67,7 @@ const EntryUpsertM = createResolver(
     // entry.set('tags', tags)
     const response = {
       ...entry.toObject(),
-      tags: tags.map((tag) => tag.toObject())
+      tags
     }
 
     return response
