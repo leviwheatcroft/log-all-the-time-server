@@ -9,6 +9,8 @@ const dbg = require('debug')('tl')
 // } = require('../../../db')
 const { Entry } = require('../../../db')
 
+const dayMs = 24 * 60 * 60 * 1000
+
 const EntryFilterQ = createResolver(
   async (root, query, ctx) => {
     const {
@@ -33,7 +35,7 @@ const EntryFilterQ = createResolver(
       ...dateFrom || dateTo ? {
         date: {
           ...dateFrom ? { $gte: dateFrom } : {},
-          ...dateTo ? { $lte: dateTo } : {}
+          ...dateTo ? { $lte: new Date(dateTo.valueOf() + dayMs) } : {}
         }
       } : {},
       ...tags.length ? { tags: { $all: tags } } : {}
