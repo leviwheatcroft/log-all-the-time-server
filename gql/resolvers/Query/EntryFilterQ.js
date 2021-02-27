@@ -9,7 +9,7 @@ const dbg = require('debug')('tl')
 // } = require('../../../db')
 const { Entry } = require('../../../db')
 
-const dayMs = 24 * 60 * 60 * 1000
+// const dayMs = 24 * 60 * 60 * 1000
 
 const EntryFilterQ = createResolver(
   async (root, query, ctx) => {
@@ -20,22 +20,23 @@ const EntryFilterQ = createResolver(
       tags
     } = query
 
-    // const tagIds = []
-    // if (tags && tags.length) {
-    //   await asyncPool(6, tags, async (tagName) => {
-    //     const result = await Tag.findOne({
-    //       tagName
-    //     }).exec()
-    //     if (result)
-    //       tagIds.push(result._id)
-    //   })
-    // }
+    const dates = [dateFrom, dateTo]
+    dates.forEach((date) => {
+      if (
+        date.getUTCHours() !== 0 ||
+        date.getUTCMinutes() !== 0 ||
+        date.getUTCSeconds() !== 0 ||
+        date.getUTCMilliseconds() !== 0
+      )
+        throw new RangeError('date is not UTC midnight', { date })
+    })
 
     const filter = {
+      deleted: { $ne: true },
       ...dateFrom || dateTo ? {
         date: {
           ...dateFrom ? { $gte: dateFrom } : {},
-          ...dateTo ? { $lte: new Date(dateTo.valueOf() + dayMs) } : {}
+          ...dateTo ? { $lte: dateTo } : {}
         }
       } : {},
       ...tags.length ? { tags: { $all: tags } } : {}

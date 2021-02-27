@@ -12,7 +12,9 @@ const EntryQ = createResolver(
     } = query
     // const _id = query._id || ctx.jwt.userId
     const entries = await Entry.find(
-      {},
+      {
+        deleted: { $ne: true }
+      },
       null,
       {
         populate: 'tags',

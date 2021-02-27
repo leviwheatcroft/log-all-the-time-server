@@ -22,6 +22,9 @@ type Mutation {
   EntryUpsertM(
     entry: EntryI!
   ): Entry!
+  EntryDeleteM(
+    id: ObjectId!
+  ): Entry!
 }
 `
 

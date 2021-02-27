@@ -6,6 +6,7 @@ input EntryI {
   description: String!
   date: Date!
   duration: Int!
+  deleted: Boolean
   tags: [TagI]!
 }
 `

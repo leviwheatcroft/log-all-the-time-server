@@ -7,11 +7,9 @@ const entrySchema = new mongoose.Schema(
   {
     _id: { type: ObjectId, auto: true },
     date: Date,
-    raw: String,
     description: String,
-    timeStart: String,
-    timeEnd: String,
     duration: Number,
+    deleted: Boolean,
     tags: [
       {
         type: ObjectId,

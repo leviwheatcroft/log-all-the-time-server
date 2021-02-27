@@ -19,6 +19,15 @@ const EntryUpsertM = createResolver(
       tags
     } = query.entry
 
+    // move this to scalar definition ?
+    if (
+      date.getUTCHours() !== 0 ||
+      date.getUTCMinutes() !== 0 ||
+      date.getUTCSeconds() !== 0 ||
+      date.getUTCMilliseconds() !== 0
+    )
+      throw new RangeError('date is not UTC midnight', { date })
+
     // managing tags here is a little strange.
     // we need tag.id for all tags, and a plain object like { id, tagName }
     // but we don't actually need the tag documents.
