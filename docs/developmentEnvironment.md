@@ -20,6 +20,7 @@ docker run \
   -e MONGO_INITDB_ROOT_USERNAME=root \
   -e MONGO_INITDB_ROOT_PASSWORD=rootpwd \
   -v /home/levi/git/time-log-server/mongoData:/data/db \
+  -v /home/levi/git/time-log-server/mongoDumps:/mongoDumps \
   -p "27017:27017" \
   --name mongo \
   mongo:4.4.3-bionic --auth
@@ -61,4 +62,10 @@ db.createUser(
 
 ```
 exit
+```
+
+## dumps
+
+```
+docker exec mongo sh -c 'exec mongodump --uri="mongodb://timelog:timelog@localhost:27017/timelog" --archive > /mongoDumps/001.archive'
 ```
