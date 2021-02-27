@@ -8,6 +8,7 @@ const { Entry } = require('./Entry')
 const { EntryI } = require('./EntryI')
 const { Tag } = require('./Tag')
 const { TagI } = require('./TagI')
+const { Duration } = require('./Duration')
 
 const typeDefs = [
   Mutation,
@@ -19,7 +20,8 @@ const typeDefs = [
   Entry,
   EntryI,
   Tag,
-  TagI
+  TagI,
+  Duration
 ]
 
 module.exports = {

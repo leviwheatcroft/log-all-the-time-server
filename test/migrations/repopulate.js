@@ -1,9 +1,14 @@
-require('dotenv-flow').config({ path: '../../' })
 /* eslint-disable no-console */
+const { default: asyncPool } = require('tiny-async-pool')
+require('dotenv-flow').config({ path: '../../' })
 const {
   readFileSync
 } = require('fs')
-const { default: asyncPool } = require('tiny-async-pool')
+
+const {
+  midnightUtc
+} = require('../../lib/midnightUtc')
+
 const {
   Entry,
   Tag,
@@ -41,8 +46,7 @@ async function repopulate () {
   const entryCount = process.argv[3] || 24
 
   const day = (24 * 60 * 60 * 1000)
-  const midnight = new Date()
-  midnight.setHours(0, 0, 0, 0)
+  const midnight = midnightUtc(new Date())
   const dateStart = midnight.valueOf() - (day * 5)
   const dateRange = 10 // days
   const tagSetA = randomWords(10)

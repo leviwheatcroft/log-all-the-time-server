@@ -15,6 +15,10 @@ type Query {
   TagPartialQ(
     tagPartial: String
   ): [Tag]!
+  DurationByDayQ(
+    dateFrom: Date!
+    dateTo: Date!
+  ): [Duration]!
 }
 `
 
