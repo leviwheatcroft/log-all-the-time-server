@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const mongoose = require('mongoose')
+const Team = require('./Team')
 
 const { ObjectId } = mongoose.Schema.Types
 
@@ -11,7 +12,10 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: true
   },
-  // avatarUrl: String,
+  team: {
+    type: ObjectId,
+    ref: Team
+  },
   password: String,
   passwordResetToken: String,
   passwordResetExpires: Date,

@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const User = require('./models/User')
 const Entry = require('./models/Entry')
 const Tag = require('./models/Tag')
+const Team = require('./models/Team')
 
 let instance
 
@@ -45,5 +46,6 @@ module.exports = {
   User,
   Entry,
   Tag,
+  Team,
   connect
 }

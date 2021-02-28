@@ -1,7 +1,10 @@
 const {
   createResolver
 } = require('apollo-resolvers')
-const { User } = require('../../../db')
+const {
+  User,
+  Team
+} = require('../../../db')
 const {
   NewUserError
 } = require('../../../lib/errors')
@@ -23,6 +26,12 @@ const UserRegisterM = createResolver(
       )
     }
 
+    let team = await Team.findOne()
+    if (!team) {
+      team = new Team()
+      await team.save()
+    }
+
     const active = true
     if (user) {
       Object.assign(user, { username, password, active })
@@ -31,6 +40,7 @@ const UserRegisterM = createResolver(
         active,
         email,
         password,
+        team,
         username
       })
     }
