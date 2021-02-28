@@ -37,6 +37,16 @@ docker run \
   --name mongo-express \
   mongo-express
 ```
+```
+docker run \
+  -d \
+  --rm \
+  -e ME_CONFIG_MONGODB_ADMINUSERNAME=root \
+  -e ME_CONFIG_MONGODB_ADMINPASSWORD=rootpwd \
+  -p "8081:8081" \
+  --name mongo-express \
+  mongo-express
+```
 
 ## initialise db
 

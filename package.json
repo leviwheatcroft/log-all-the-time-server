@@ -6,7 +6,8 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "ava"
   },
   "dependencies": {
     "@graphql-tools/schema": "^7.1.2",
@@ -27,5 +28,11 @@
     "mongoose-lean-id": "^0.2.0",
     "nodemon": "^2.0.7",
     "tiny-async-pool": "^1.2.0"
+  },
+  "devDependencies": {
+    "apollo-server-micro": "^2.21.0",
+    "apollo-server-testing": "^2.21.0",
+    "ava": "^3.15.0",
+    "mongodb-memory-server": "^6.9.3"
   }
 }

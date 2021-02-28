@@ -39,7 +39,7 @@ const EntryFilterQ = createResolver(
           ...dateTo ? { $lte: dateTo } : {}
         }
       } : {},
-      ...tags.length ? { tags: { $all: tags } } : {}
+      ...tags && tags.length ? { tags: { $all: tags } } : {}
     }
 
     const entries = await Entry.find(

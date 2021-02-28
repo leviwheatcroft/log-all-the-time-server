@@ -13,7 +13,7 @@ let instance
  * note that it returns a mongoose instance, so if you want the mongo db
  * connection, you need to `connection = (await db.connect()).connection`
  */
-function connect () {
+function connect (uri) {
   if (instance)
     return instance
   mongoose.set('useFindAndModify', false)
@@ -24,7 +24,7 @@ function connect () {
   // you can't simply `connection = await mongoost.connect()` because in that
   // case the global `connection` would remain undefined until the promise
   // is resolved
-  instance = mongoose.connect(process.env.MONGODB_URI)
+  instance = mongoose.connect(uri || process.env.MONGODB_URI)
   instance.catch((err) => {
     console.error(err)
     console.error('MongooseDB connection error.')

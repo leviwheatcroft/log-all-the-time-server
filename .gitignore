@@ -2,3 +2,4 @@ node_modules
 mongoData
 mongoDumps
 tests/entries.json
+*.archive

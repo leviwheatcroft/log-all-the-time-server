@@ -10,7 +10,7 @@ const EntryQ = createResolver(
     const {
       limit = 20
     } = query
-    // const _id = query._id || ctx.jwt.userId
+
     const entries = await Entry.find(
       {
         deleted: { $ne: true }
@@ -22,6 +22,7 @@ const EntryQ = createResolver(
         sort: { createdAt: 'desc' }
       }
     )
+
     return entries
   }
 )
