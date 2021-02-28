@@ -10,7 +10,7 @@ const {
 } = require('../helpers')
 
 test.before(async (t) => {
-  await createDb('001 resolvers/001.001.archive')
+  await createDb('001 queries/001.001.archive')
 })
 
 const EntryQ = gql`

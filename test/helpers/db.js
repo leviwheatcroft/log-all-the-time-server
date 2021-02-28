@@ -25,7 +25,6 @@ async function createDb (archive, debug = false) {
       cwd: 'test'
     }
   )
-  // console.log(restoreProcess.stdout.toString())
   if (debug)
     console.log(restoreProcess.stderr.toString())
   await dbConnect(dbUri)
