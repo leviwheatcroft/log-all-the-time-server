@@ -16,9 +16,9 @@ const server = new ApolloServer({
   context () { return {} }
 })
 
-const { query, mutation } = createTestClient(server)
+const { query, mutate } = createTestClient(server)
 
 module.exports = {
   query,
-  mutation
+  mutate
 }

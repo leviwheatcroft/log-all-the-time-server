@@ -6,7 +6,7 @@ const {
   Types: { ObjectId }
 } = require('mongoose')
 const {
-  AUTH_REFRESH_TIMEOUT
+  AuthRefreshTimeout
 } = require('../../../lib/errors')
 // const validator = require('validator')
 const { User } = require('../../../db')
@@ -25,7 +25,7 @@ const UserRefreshM = createResolver(
     } = jwt.verify(refreshToken, JWT_SECRET)
     console.log({ userId, expiresAt })
     if (Date.parse(expiresAt) < Date.now())
-      throw new AUTH_REFRESH_TIMEOUT()
+      throw new AuthRefreshTimeout('refreshToken has expired')
 
     const user = await User.findById(ObjectId(userId))
     const accessToken = getAccessToken(user)

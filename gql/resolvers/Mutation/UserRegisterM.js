@@ -1,27 +1,26 @@
 const {
   createResolver
 } = require('apollo-resolvers')
-const {
-  ApolloError
-} = require('apollo-errors')
-// const validator = require('validator')
 const { User } = require('../../../db')
+const {
+  NewUserError
+} = require('../../../lib/errors')
 
 const UserRegisterM = createResolver(
   async (root, query, ctx) => {
     const {
-      username,
+      email,
       password,
-      email
+      username
     } = query
 
     let user = await User.findOne({ email })
 
     if (user && user.active) {
-      throw new ApolloError('USER_EXISTS', {
-        data: { email },
-        message: `User account for ${email} exists and is active`
-      })
+      throw new NewUserError(
+        `User account for ${email} exists and is active`,
+        { data: { email } }
+      )
     }
 
     const active = true
@@ -29,10 +28,10 @@ const UserRegisterM = createResolver(
       Object.assign(user, { username, password, active })
     } else {
       user = new User({
-        username,
-        password,
+        active,
         email,
-        active
+        password,
+        username
       })
     }
 

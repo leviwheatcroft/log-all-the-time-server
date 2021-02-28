@@ -15,18 +15,20 @@ async function createDb (archive, debug = false) {
     }
   })
   const dbUri = await db.getUri()
-  const restoreProcess = spawnSync(
-    'mongorestore',
-    [
-      `--uri="${dbUri}"`,
-      `--archive="${archive}"`
-    ],
-    {
-      cwd: 'test'
-    }
-  )
-  if (debug)
-    console.log(restoreProcess.stderr.toString())
+  if (archive) {
+    const restoreProcess = spawnSync(
+      'mongorestore',
+      [
+        `--uri="${dbUri}"`,
+        `--archive="${archive}"`
+      ],
+      {
+        cwd: 'test'
+      }
+    )
+    if (debug)
+      console.log(restoreProcess.stderr.toString())
+  }
   await dbConnect(dbUri)
   return db
 }
