@@ -16,8 +16,8 @@ test.before(async (t) => {
 const EntryFilterAsCsvQ = gql`
   query EntryFilterAsCsvQ(
     $limit: Int
-    $dateFrom: Date
-    $dateTo: Date
+    $dateFrom: DateMidnightUtc
+    $dateTo: DateMidnightUtc
     $dateFormat: String
     $durationFormat: String
     $tags: [ObjectId]
@@ -41,7 +41,6 @@ test.serial('EntryFilterAsCsvQ returns csv', async (t) => {
       dateTo: '2021-02-28T00:00:00.000Z'
     }
   })
-
   t.is(result.data.EntryFilterAsCsvQ.split('\n').length, 16)
 })
 

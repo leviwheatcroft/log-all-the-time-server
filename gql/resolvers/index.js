@@ -3,6 +3,7 @@ const { QueryMap } = require('./Query')
 const { MutationMap } = require('./Mutation')
 const { TokenMap } = require('./Token')
 const { DateMap } = require('./Date')
+const { DateMidnightUtcMap } = require('./DateMidnightUtc')
 const { ObjectIdMap } = require('./ObjectId')
 
 const resolvers = combineResolvers([
@@ -10,6 +11,7 @@ const resolvers = combineResolvers([
   MutationMap,
   TokenMap,
   DateMap,
+  DateMidnightUtcMap,
   ObjectIdMap
 ])
 

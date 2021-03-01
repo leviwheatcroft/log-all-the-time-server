@@ -14,8 +14,8 @@ type Query {
   ): [Entry]!
   EntryFilterAsCsvQ(
     limit: Int
-    dateFrom: Date
-    dateTo: Date
+    dateFrom: DateMidnightUtc
+    dateTo: DateMidnightUtc
     tags: [ObjectId]
     dateFormat: String
     durationFormat: String

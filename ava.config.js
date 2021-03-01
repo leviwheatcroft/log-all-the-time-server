@@ -2,7 +2,8 @@
 export default {
   files: [
     'test/001 queries/*.js',
-    'test/002 mutations/*.js'
+    'test/002 mutations/*.js',
+    'test/003 scalars/*.js'
   ],
   concurrency: 5,
   verbose: true
