@@ -5,11 +5,15 @@ const {
   Transform
 } = require('stream')
 const stringify = require('csv-stringify')
+const dayjs = require('dayjs')
+const duration = require('dayjs/plugin/duration')
 // const { default: asyncPool } = require('tiny-async-pool')
 // const {
 //   Tag
 // } = require('../../../db')
 const { Entry } = require('../../../db')
+
+dayjs.extend(duration)
 
 // const dayMs = 24 * 60 * 60 * 1000
 
@@ -19,7 +23,9 @@ const EntryFilterAsCsvQ = createResolver(
       limit = 20,
       dateFrom,
       dateTo,
-      tags
+      tags,
+      dateFormat = 'DD/MM/YY',
+      durationFormat = 'HH:mm'
     } = query
 
     const dates = [dateFrom, dateTo]
@@ -58,18 +64,18 @@ const EntryFilterAsCsvQ = createResolver(
       writableObjectMode: true,
       readableObjectMode: true,
       transform (chunk, encoding, callback) {
-        const {
+        let {
           date,
           duration,
-          description,
           tags
         } = chunk
-        const row = [
-          date,
-          duration,
-          description,
-          tags.map(({ tagName }) => tagName).join(', ')
-        ]
+        const {
+          description
+        } = chunk
+        date = dayjs(date).format(dateFormat)
+        duration = dayjs.duration(duration * 60 * 1000).format(durationFormat)
+        tags = tags.map(({ tagName }) => tagName).join(', ')
+        const row = [date, duration, description, tags]
         callback(null, row)
       }
     })

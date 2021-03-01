@@ -17,6 +17,8 @@ type Query {
     dateFrom: Date
     dateTo: Date
     tags: [ObjectId]
+    dateFormat: String
+    durationFormat: String
   ): String!
   TagPartialQ(
     tagPartial: String
