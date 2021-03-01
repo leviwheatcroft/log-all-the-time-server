@@ -12,6 +12,12 @@ type Query {
     dateTo: Date
     tags: [ObjectId]
   ): [Entry]!
+  EntryFilterAsCsvQ(
+    limit: Int
+    dateFrom: Date
+    dateTo: Date
+    tags: [ObjectId]
+  ): String!
   TagPartialQ(
     tagPartial: String
   ): [Tag]!
