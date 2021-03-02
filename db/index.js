@@ -8,15 +8,16 @@ const Team = require('./models/Team')
 let instance
 
 /**
- * ## connect
+ * ## listen
  * this fn is unusual in that it's not declared as an `async` function, but
  * it still returns a promise, therefore it can be called with `await connect()`
  * note that it returns a mongoose instance, so if you want the mongo db
  * connection, you need to `connection = (await db.connect()).connection`
  */
-function connect (uri) {
+function mongooseConnect (uri) {
   if (instance)
     return instance
+
   mongoose.set('useFindAndModify', false)
   mongoose.set('useCreateIndex', true)
   mongoose.set('useNewUrlParser', true)
@@ -47,5 +48,5 @@ module.exports = {
   Entry,
   Tag,
   Team,
-  connect
+  mongooseConnect
 }

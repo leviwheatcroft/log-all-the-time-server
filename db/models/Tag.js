@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Team = require('./Team')
 
 const { ObjectId } = mongoose.Schema.Types
 
@@ -8,7 +9,11 @@ const tagSchema = new mongoose.Schema(
       type: ObjectId,
       auto: true
     },
-    tagName: String
+    tagName: String,
+    team: {
+      type: ObjectId,
+      ref: Team
+    }
   },
   {
     timestamps: true,

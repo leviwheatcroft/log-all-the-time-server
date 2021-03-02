@@ -5,7 +5,7 @@ const {
   spawnSync
 } = require('child_process')
 const {
-  connect: dbConnect
+  mongooseConnect
 } = require('../../db')
 
 async function createDb (archive, debug = false) {
@@ -29,7 +29,7 @@ async function createDb (archive, debug = false) {
     if (debug)
       console.log(restoreProcess.stderr.toString())
   }
-  await dbConnect(dbUri)
+  await mongooseConnect(dbUri)
   return db
 }
 

@@ -8,17 +8,24 @@ const {
 const {
   typeDefs,
   resolvers
-} = require('../../gql')
+} = require('../../apollo')
+
+let context
+
+function setContext (ctx) {
+  context = ctx
+}
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context () { return {} }
+  context () { return context }
 })
 
 const { query, mutate } = createTestClient(server)
 
 module.exports = {
   query,
-  mutate
+  mutate,
+  setContext
 }

@@ -18,15 +18,12 @@ const EntryUpsertM = createResolver(
       description,
       tags
     } = query.entry
-
-    // move this to scalar definition ?
-    if (
-      date.getUTCHours() !== 0 ||
-      date.getUTCMinutes() !== 0 ||
-      date.getUTCSeconds() !== 0 ||
-      date.getUTCMilliseconds() !== 0
-    )
-      throw new RangeError('date is not UTC midnight', { date })
+    const {
+      user
+    } = ctx
+    const {
+      team
+    } = user
 
     // managing tags here is a little strange.
     // we need tag.id for all tags, and a plain object like { id, tagName }
@@ -36,7 +33,13 @@ const EntryUpsertM = createResolver(
 
     await asyncPool(6, tags, async (tag) => {
       if (!tag.id) {
-        const newTag = new Tag({ tagName: tag.tagName })
+        const {
+          tagName
+        } = tag
+        const newTag = new Tag({
+          team,
+          tagName
+        })
         await newTag.save()
         tag.id = newTag.id
       }
@@ -49,6 +52,8 @@ const EntryUpsertM = createResolver(
           _id: id
         },
         {
+          user,
+          team,
           description,
           date,
           duration,
@@ -60,6 +65,8 @@ const EntryUpsertM = createResolver(
       ).exec()
     } else {
       entry = new Entry({
+        user,
+        team,
         date,
         description,
         duration,
