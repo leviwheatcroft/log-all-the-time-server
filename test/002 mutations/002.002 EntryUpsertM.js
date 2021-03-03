@@ -11,7 +11,7 @@ const {
 
 const {
   db: { createDb },
-  apollo: { mutate, setContext }
+  apollo: { mutate, setApolloContext }
 } = require('../helpers')
 
 test.before(async (t) => {
@@ -35,7 +35,7 @@ const EntryUpsertM = gql`
 
 test.serial('EntryUpsertM create new entry', async (t) => {
   const user = await User.findOne()
-  setContext({ user })
+  setApolloContext({ user })
 
   const result = await mutate({
     mutation: EntryUpsertM,

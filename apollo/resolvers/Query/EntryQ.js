@@ -10,10 +10,14 @@ const EntryQ = createResolver(
     const {
       limit = 20
     } = query
+    const {
+      user
+    } = ctx
 
     const entries = await Entry.find(
       {
-        deleted: { $ne: true }
+        deleted: { $ne: true },
+        user: user.id
       },
       null,
       {

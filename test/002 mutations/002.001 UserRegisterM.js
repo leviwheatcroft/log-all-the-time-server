@@ -3,14 +3,14 @@ require('dotenv-flow').config('../../')
 
 const gql = require('graphql-tag')
 const test = require('ava')
-const {
-  User,
-  Team
-} = require('../../db')
+// const {
+//   User,
+//   Team
+// } = require('../helpers/db')
 
 const {
-  db: { createDb },
-  apollo: { mutate }
+  db: { createDb, User, Team },
+  apollo: { mutate, setApolloContext }
 } = require('../helpers')
 
 test.before(async (t) => {
@@ -49,6 +49,7 @@ test.serial('UserRegisterM create new user', async (t) => {
   t.truthy(team)
 })
 test.serial('UserRegisterM email collision', async (t) => {
+  setApolloContext({ squelchErrors: true })
   const result = await mutate({
     mutation: UserRegisterM,
     variables: {
@@ -60,6 +61,7 @@ test.serial('UserRegisterM email collision', async (t) => {
   t.is(result.errors[0].extensions.code, 'NEW_USER_ERROR')
   const users = await User.find()
   t.is(users.length, 1)
+  setApolloContext({ squelchErrors: false })
 })
 test.serial('UserRegisterM reactivate user', async (t) => {
   const user = await User.findOne()

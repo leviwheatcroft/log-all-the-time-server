@@ -5,21 +5,38 @@ const {
   ApolloServer
 } = require('apollo-server-micro')
 
+const tml = require('./tml')
 const {
   typeDefs,
   resolvers
 } = require('../../apollo')
 
-let context
+let _context = {}
 
-function setContext (ctx) {
-  context = ctx
+function setApolloContext (ctx) {
+  _context = ctx
+}
+
+function context () {
+  return _context
+}
+
+function formatError (error) {
+  if (_context.squelchErrors)
+    return error
+  tml.line()
+  tml.bl(`Error Code: ${error.extensions.code}`)
+  tml.wh(`Path: ${error.path}`)
+  tml.wh('extensions.data:')
+  console.info(error.extensions.data)
+  return error
 }
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context () { return context }
+  context,
+  formatError
 })
 
 const { query, mutate } = createTestClient(server)
@@ -27,5 +44,5 @@ const { query, mutate } = createTestClient(server)
 module.exports = {
   query,
   mutate,
-  setContext
+  setApolloContext
 }

@@ -16,8 +16,8 @@ test.before(async (t) => {
 const EntryFilterQ = gql`
   query EntryFilterQ(
     $limit: Int
-    $dateFrom: Date
-    $dateTo: Date
+    $dateFrom: DateMidnightUtc
+    $dateTo: DateMidnightUtc
     $tags: [ObjectId]
   ) {
     EntryFilterQ(

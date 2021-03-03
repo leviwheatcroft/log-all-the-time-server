@@ -5,6 +5,10 @@ const {
   spawnSync
 } = require('child_process')
 const {
+  User,
+  Tag,
+  Entry,
+  Team,
   mongooseConnect
 } = require('../../db')
 
@@ -34,5 +38,9 @@ async function createDb (archive, debug = false) {
 }
 
 module.exports = {
+  User,
+  Tag,
+  Entry,
+  Team,
   createDb
 }

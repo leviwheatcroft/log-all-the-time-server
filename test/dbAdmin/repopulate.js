@@ -1,19 +1,27 @@
 /* eslint-disable no-console */
-const { default: asyncPool } = require('tiny-async-pool')
 require('dotenv-flow').config({ path: '../../' })
+const gql = require('graphql-tag')
+
 const {
   readFileSync
 } = require('fs')
 
+const tml = require('../helpers/tml')
 const {
   midnightUtc
 } = require('../../lib/midnightUtc')
-
+const {
+  mutate,
+  setApolloContext
+} = require('../helpers/apollo')
 const {
   Entry,
   Tag,
-  connect
+  User,
+  mongooseConnect
 } = require('../../db')
+
+
 
 let words
 
@@ -31,19 +39,36 @@ function randomWords (count) {
 }
 
 async function repopulate () {
-  const connection = await connect()
-  if (process.argv[2] !== 'destructive!') {
-    console.log('this script will destroy Entry and Tag collections.')
-    console.log('if you\'re really sure that\'s what you want, run it like')
-    console.log('node repopulate.js destructive!')
-    connection.disconnect()
-    return
+  const timer = new tml.Timer()
+  tml.line()
+  tml.bl(`starting mongoose: ${process.env.MONGODB_URI}`)
+  const db = await mongooseConnect()
+
+  const user = await User.findOne()
+  setApolloContext({ user })
+
+  if (process.argv[3] === 'purge!') {
+    await Entry.deleteMany({}).exec()
+    await Tag.deleteMany({}).exec()
+    tml.wh('purged all existing entries & tags')
   }
 
-  await Entry.deleteMany({}).exec()
-  await Tag.deleteMany({}).exec()
+  const EntryUpsertM = gql`
+    mutation EntryUpsertM($entry: EntryI!) {
+      EntryUpsertM(entry: $entry) {
+        id
+        description
+        date
+        duration
+        tags {
+          id
+          tagName
+        }
+      }
+    }
+  `
 
-  const entryCount = process.argv[3] || 24
+  const entryCount = process.argv[2] || 24
 
   const day = (24 * 60 * 60 * 1000)
   const midnight = midnightUtc(new Date())
@@ -62,8 +87,8 @@ async function repopulate () {
     const idxA = Math.floor(Math.random() * tagSetA.length)
     const idxB = Math.floor(Math.random() * tagSetB.length)
     return [
-      tagSetA[idxA],
-      tagSetB[idxB]
+      { tagName: tagSetA[idxA] },
+      { tagName: tagSetB[idxB] }
     ]
   }
   function duration () {
@@ -75,39 +100,57 @@ async function repopulate () {
     return randomWords(minLength + modifier).join(' ')
   }
 
-  const entries = []
+  const table = new tml.Table()
 
-  for (let i = 0; i < entryCount; i += 1) {
-    entries.push({
-      date: date(),
-      tags: tags(),
-      duration: duration(),
-      description: description()
-    })
+  function* _entries () {
+    let i = 0
+    while (i < entryCount) {
+      i += 1
+      const entry = {
+        date: date(),
+        tags: tags(),
+        duration: duration(),
+        description: description()
+      }
+      table.push(entry)
+      yield entry
+    }
   }
 
-  await asyncPool(6, entries, async (entry) => {
-    const tags = entry.tags.map((tag, idx) => [tag, idx])
-    await asyncPool(1, tags, async ([tagName, idx]) => {
-      const result = await Tag.findOneAndUpdate(
-        {
-          tagName
-        },
-        {
-          tagName
-        },
-        {
-          upsert: true,
-          new: true
-        }
-      ).exec()
-      entry.tags[idx] = result
-    })
+  const entries = _entries()
 
-    entry = new Entry(entry)
-    await entry.save()
-  })
-  connection.disconnect()
+  const deferred = []
+
+  async function worker () {
+    let resolver
+    // eslint-disable-next-line no-return-assign
+    deferred.push(new Promise((resolve) => resolver = resolve))
+    while (!entries.done) {
+      const { done, value: entry } = entries.next()
+      if (done) {
+        entries.done = true
+        break
+      }
+      await mutate({
+        mutation: EntryUpsertM,
+        variables: { entry }
+      })
+    }
+    resolver()
+  }
+
+  for (let i = 0; i < 6; i += 1)
+    worker()
+
+  await Promise.all(deferred)
+
+  tml.wh(`recorded ${entryCount} entries`)
+  tml.wh(`this op took: ${timer.elapsed()}`)
+  table.write()
+
+  tml.bl('stopping apollo & db')
+  await db.disconnect()
+  tml.bl('stopped')
 }
 
 repopulate()

@@ -5,12 +5,18 @@ const gql = require('graphql-tag')
 const test = require('ava')
 
 const {
-  db: { createDb },
-  apollo: { query }
+  db: { createDb, User },
+  apollo: {
+    query,
+    setApolloContext
+  }
 } = require('../helpers')
 
 test.before(async (t) => {
   await createDb('001 queries/001.001.archive')
+  const user = await User.findOne()
+  t.context.user = user
+  setApolloContext({ user })
 })
 
 const EntryQ = gql`
