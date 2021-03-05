@@ -1,4 +1,5 @@
 require('dotenv-flow').config({ path: '../../' })
+const yargsParser = require('yargs-parser')
 const {
   createTestClient
 } = require('apollo-server-testing')
@@ -14,7 +15,13 @@ const {
 } = require('../helpers/randomWords')
 const tml = require('../../lib/tml')
 
-async function createUser () {
+async function createUser (opts) {
+  const {
+    count = 1,
+    username = false
+  } = opts
+  if (count > 1 && username)
+    throw new RangeError('can only create 1 user if username is specified')
   const timer = new tml.Timer()
   tml.line()
   tml.bl('starting mongoose', process.env.MONGODB_URI)
@@ -22,7 +29,6 @@ async function createUser () {
   tml.bl('starting apollo')
   const { server } = await apolloListen({ includeMiddlewares: false })
   const { mutate } = createTestClient(server)
-  const count = process.argv[2] || 1
 
   const UserRegisterM = gql`
     mutation UserRegisterM(
@@ -40,7 +46,7 @@ async function createUser () {
 
   const uniqueUserName = _uniqueRandomWord()
   for (let i = 0; i < count; i += 1) {
-    const user = uniqueUserName.next().value
+    const user = username || uniqueUserName.next().value
     await mutate({
       mutation: UserRegisterM,
       variables: {
@@ -60,4 +66,9 @@ async function createUser () {
   tml.bl('stopped')
 }
 
-createUser()
+if (require.main === module)
+  createUser(yargsParser(process.argv.slice(2)))
+
+module.exports = {
+  createUser
+}

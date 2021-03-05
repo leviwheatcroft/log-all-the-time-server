@@ -16,6 +16,7 @@ const {
 test.before(async (t) => {
   await createDb()
 })
+test.beforeEach((t) => setApolloContext({ squelchErrors: true }))
 
 const UserRegisterM = gql`
   mutation UserRegisterM(
@@ -49,7 +50,6 @@ test.serial('UserRegisterM create new user', async (t) => {
   t.truthy(team)
 })
 test.serial('UserRegisterM email collision', async (t) => {
-  setApolloContext({ squelchErrors: true })
   const result = await mutate({
     mutation: UserRegisterM,
     variables: {
@@ -58,10 +58,9 @@ test.serial('UserRegisterM email collision', async (t) => {
       password: 'test'
     }
   })
-  t.is(result.errors[0].extensions.code, 'NEW_USER_ERROR')
-  const users = await User.find()
-  t.is(users.length, 1)
-  setApolloContext({ squelchErrors: false })
+  t.truthy(result.errors[0])
+  const err = result.errors[0]
+  t.is(err.code, 'NEW_USER_ERROR')
 })
 test.serial('UserRegisterM reactivate user', async (t) => {
   const user = await User.findOne()

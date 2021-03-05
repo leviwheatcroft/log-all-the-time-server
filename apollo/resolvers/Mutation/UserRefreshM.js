@@ -11,6 +11,9 @@ const {
 // const validator = require('validator')
 const { User } = require('../../../db')
 const { getAccessToken } = require('../../../lib/jwt')
+const {
+  AuthInactiveUserError
+} = require('../../../lib/errors')
 
 const { JWT_SECRET } = process.env
 
@@ -23,13 +26,19 @@ const UserRefreshM = createResolver(
       userId,
       expiresAt
     } = jwt.verify(refreshToken, JWT_SECRET)
-    console.log({ userId, expiresAt })
+
     if (Date.parse(expiresAt) < Date.now())
       throw new AuthRefreshTimeout('refreshToken has expired')
 
     const user = await User.findById(ObjectId(userId))
+    if (!user) {
+      throw new AuthInactiveUserError(
+        'That user doesn\'t exist or is inactive?!'
+      )
+    }
+
     const accessToken = getAccessToken(user)
-    console.log(accessToken)
+
     return accessToken
   }
 )

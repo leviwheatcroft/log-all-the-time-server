@@ -1,12 +1,14 @@
 const {
   createResolver
 } = require('apollo-resolvers')
-const {
-  ApolloError
-} = require('apollo-errors')
 // const validator = require('validator')
 const { User } = require('../../../db')
 const { getTokens } = require('../../../lib/jwt')
+const {
+  AuthBadEmailError,
+  AuthBadPasswordError,
+  AuthInactiveUserError
+} = require('../../../lib/errors')
 
 const UserLoginM = createResolver(
   async (root, query, ctx) => {
@@ -17,23 +19,22 @@ const UserLoginM = createResolver(
 
     const user = await User.findOne({ email: email.toLowerCase() })
     if (!user) {
-      throw new ApolloError('badUser', {
-        message: `No user with email ${email}`,
-        data: { email }
-      })
+      throw new AuthBadEmailError(
+        'There\'s no user with that email address',
+        { data: { email } }
+      )
     }
 
     if (!await user.comparePassword(password)) {
-      throw new ApolloError('badPassword', {
-        message: 'Incorrect Password'
-      })
+      throw new AuthBadPasswordError(
+        'That password is incorrect'
+      )
     }
 
     if (!user.active) {
-      throw new ApolloError('inactiveUser', {
-        message: `User ${email} is inactive, re-register`,
-        data: { email }
-      })
+      throw new AuthInactiveUserError(
+        'This user account is inactive, you need to re-register'
+      )
     }
 
     return getTokens(user)

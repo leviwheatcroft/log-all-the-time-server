@@ -16,6 +16,7 @@
     "apollo-server": "^2.19.2",
     "bcrypt": "^5.0.0",
     "chalk": "^4.1.0",
+    "check-types": "^11.1.2",
     "csv-stringify": "^5.6.2",
     "dayjs": "^1.10.4",
     "debug": "^4.3.1",
@@ -36,6 +37,7 @@
     "apollo-server-micro": "^2.21.0",
     "apollo-server-testing": "^2.21.0",
     "ava": "^3.15.0",
-    "mongodb-memory-server": "^6.9.3"
+    "mongodb-memory-server": "^6.9.3",
+    "yargs-parser": "^20.2.6"
   }
 }

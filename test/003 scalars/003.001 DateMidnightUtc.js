@@ -9,6 +9,7 @@ const {
 test.before(async (t) => {
   await createDb()
 })
+test.beforeEach((t) => setApolloContext({ squelchErrors: true }))
 
 const EntryFilterAsCsvQ = gql`
   query EntryFilterAsCsvQ(
@@ -31,7 +32,6 @@ const EntryFilterAsCsvQ = gql`
 `
 
 test.serial('DateMidnightUtc returns csv', async (t) => {
-  setApolloContext({ squelchErrors: true })
   const result = await query({
     query: EntryFilterAsCsvQ,
     variables: {
@@ -40,6 +40,8 @@ test.serial('DateMidnightUtc returns csv', async (t) => {
     }
   })
 
-  t.is(result.errors[0].extensions.code, 'MIDNIGHT_UTC_ERROR')
-  setApolloContext({ squelchErrors: false })
+  t.truthy(result.errors[0])
+  const err = result.errors[0]
+
+  t.is(err.code, 'MIDNIGHT_UTC_ERROR')
 })

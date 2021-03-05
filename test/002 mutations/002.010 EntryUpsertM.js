@@ -15,7 +15,7 @@ const {
 } = require('../helpers')
 
 test.before(async (t) => {
-  await createDb('002 mutations/002.002.archive')
+  await createDb('002 mutations/002.010.archive')
 })
 
 const EntryUpsertM = gql`

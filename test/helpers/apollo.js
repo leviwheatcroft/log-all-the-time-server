@@ -5,10 +5,11 @@ const {
   ApolloServer
 } = require('apollo-server-micro')
 
-const tml = require('./tml')
+// const tml = require('./tml')
 const {
   typeDefs,
-  resolvers
+  resolvers,
+  formatError: _formatError
 } = require('../../apollo')
 
 let _context = {}
@@ -22,14 +23,7 @@ function context () {
 }
 
 function formatError (error) {
-  if (_context.squelchErrors)
-    return error
-  tml.line()
-  tml.bl(`Error Code: ${error.extensions.code}`)
-  tml.wh(`Path: ${error.path}`)
-  tml.wh('extensions.data:')
-  console.info(error.extensions.data)
-  return error
+  return _formatError(error, _context.squelchErrors)
 }
 
 const server = new ApolloServer({

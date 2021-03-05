@@ -8,6 +8,45 @@ const tml = require('../lib/tml')
 
 let instance
 
+// quiet is used when running tests. not used by apollo server
+function formatError (error, quiet) {
+  const {
+    message,
+    path,
+    extensions: {
+      code,
+      data,
+      exposedData,
+      exception
+    }
+  } = error
+
+  if (!quiet) {
+    tml.line()
+    tml.bl(`Error Code: ${code}`)
+    tml.wh(`Path: ${path}`)
+
+    if (data) {
+      tml.wh('extensions.data:')
+      console.info(data)
+    }
+    if (exposedData) {
+      tml.wh('extensions.exposedData:')
+      console.info(exposedData)
+    }
+    if (exception && exception.stacktrace) {
+      tml.wh('extensions.exception.stacktrace')
+      console.info(error.extensions.exception.stacktrace)
+    }
+  }
+
+  return {
+    message,
+    code,
+    exposedData
+  }
+}
+
 /**
  * ## listen
  * this fn is unusual in that it's not declared as an `async` function, but
@@ -29,23 +68,6 @@ function apolloListen (options = {}) {
     return { req }
   }
 
-  function formatError (error) {
-    tml.line()
-    tml.bl(`Error Code: ${error.extensions.code}`)
-    tml.wh(`Path: ${error.path}`)
-
-    if (error.extensions && error.extensions.data) {
-      tml.wh('extensions.data:')
-      console.info(error.extensions.data)
-    }
-    if (error.extensions && error.extensions.exception) {
-      tml.wh('extensions.exception.stacktrace')
-      console.info(error.extensions.exception.stacktrace)
-    }
-
-    return error
-  }
-
   const server = new ApolloServer({ schema, context, formatError })
 
   instance = server.listen().then(({ url }) => {
@@ -58,6 +80,7 @@ function apolloListen (options = {}) {
 }
 
 module.exports = {
+  formatError,
   resolvers,
   typeDefs,
   middlewares,
