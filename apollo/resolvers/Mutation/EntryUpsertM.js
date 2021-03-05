@@ -85,6 +85,8 @@ const EntryUpsertM = createResolver(
       })
       await entry.save()
     }
+    await entry.populate('user').execPopulate()
+
     // populating a saved doc is complicated!
     // this would query the db again:
     // await Entry.populate(entry, 'tags')

@@ -2,10 +2,6 @@
 require('dotenv-flow').config({ path: '../../' })
 const gql = require('graphql-tag')
 
-const {
-  readFileSync
-} = require('fs')
-
 const tml = require('../../lib/tml')
 const {
   midnightUtc
@@ -15,26 +11,12 @@ const {
   setApolloContext
 } = require('../helpers/apollo')
 const {
-  Entry,
-  Tag,
   User,
   mongooseConnect
 } = require('../../db')
-
-let words
-
-function randomWord () {
-  if (!words)
-    words = readFileSync('./words.txt', 'utf8').split(' ')
-  const idx = Math.floor(Math.random() * words.length)
-  return words[idx]
-}
-function randomWords (count) {
-  const words = []
-  for (let i = 0; i < count; i += 1)
-    words.push(randomWord())
-  return words
-}
+const {
+  randomWords
+} = require('../helpers/randomWords')
 
 async function repopulate () {
   const timer = new tml.Timer()
@@ -42,19 +24,13 @@ async function repopulate () {
   tml.bl(`starting mongoose: ${process.env.MONGODB_URI}`)
   const db = await mongooseConnect()
 
-  const user = await User.findOne()
-  setApolloContext({ user })
-
-  if (process.argv[3] === 'purge!') {
-    await Entry.deleteMany({}).exec()
-    await Tag.deleteMany({}).exec()
-    tml.wh('purged all existing entries & tags')
-  }
-
   const EntryUpsertM = gql`
     mutation EntryUpsertM($entry: EntryI!) {
       EntryUpsertM(entry: $entry) {
         id
+        user {
+          username
+        }
         description
         date
         duration
@@ -66,14 +42,14 @@ async function repopulate () {
     }
   `
 
-  const entryCount = process.argv[2] || 24
+  const count = process.argv[2] || 24
 
   const day = (24 * 60 * 60 * 1000)
   const midnight = midnightUtc(new Date())
   const dateStart = midnight.valueOf() - (day * 5)
   const dateRange = 10 // days
-  const tagSetA = randomWords(10)
-  const tagSetB = randomWords(4)
+  const tagSetA = randomWords(10).split(' ')
+  const tagSetB = randomWords(4).split(' ')
 
   function date () {
     const modifier = Math.floor(Math.random() * dateRange) * day
@@ -95,54 +71,34 @@ async function repopulate () {
   function description () {
     const minLength = 3
     const modifier = Math.floor(Math.random() * 10)
-    return randomWords(minLength + modifier).join(' ')
+    return randomWords(minLength + modifier)
+  }
+
+  const users = await User.find()
+
+  function user () {
+    const idx = Math.floor(Math.random() * users.length)
+    return users[idx]
   }
 
   const table = new tml.Table()
 
-  function* _entries () {
-    let i = 0
-    while (i < entryCount) {
-      i += 1
-      const entry = {
-        date: date(),
-        tags: tags(),
-        duration: duration(),
-        description: description()
-      }
-      table.push(entry)
-      yield entry
+  for (let i = 0; i < count; i += 1) {
+    const entry = {
+      date: date(),
+      tags: tags(),
+      duration: duration(),
+      description: description()
     }
+    setApolloContext({ user: user() })
+    const result = await mutate({
+      mutation: EntryUpsertM,
+      variables: { entry }
+    })
+    table.push(result.data.EntryUpsertM)
   }
 
-  const entries = _entries()
-
-  const deferred = []
-
-  async function worker () {
-    let resolver
-    // eslint-disable-next-line no-return-assign
-    deferred.push(new Promise((resolve) => resolver = resolve))
-    while (!entries.done) {
-      const { done, value: entry } = entries.next()
-      if (done) {
-        entries.done = true
-        break
-      }
-      await mutate({
-        mutation: EntryUpsertM,
-        variables: { entry }
-      })
-    }
-    resolver()
-  }
-
-  for (let i = 0; i < 6; i += 1)
-    worker()
-
-  await Promise.all(deferred)
-
-  tml.wh(`recorded ${entryCount} entries`)
+  tml.wh(`recorded ${count} entries`)
   tml.wh(`this op took: ${timer.elapsed()}`)
   table.write()
 
