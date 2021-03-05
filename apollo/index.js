@@ -4,6 +4,7 @@ const { applyMiddleware } = require('graphql-middleware')
 const { resolvers } = require('./resolvers')
 const { typeDefs } = require('./typeDefs')
 const { middlewares } = require('./middlewares')
+const tml = require('../lib/tml')
 
 let instance
 
@@ -14,7 +15,7 @@ let instance
  */
 function apolloListen (options = {}) {
   const {
-    includeMiddlewares = false
+    includeMiddlewares = true
   } = options
   if (instance)
     return instance
@@ -29,11 +30,19 @@ function apolloListen (options = {}) {
   }
 
   function formatError (error) {
-    console.log(error)
-    if (error.extensions.code === 'AUTH_ACCESS_TIMEOUT')
-      return error
-    if (error.extensions && error.extensions.exception)
-      console.log(error.extensions.exception.stacktrace)
+    tml.line()
+    tml.bl(`Error Code: ${error.extensions.code}`)
+    tml.wh(`Path: ${error.path}`)
+
+    if (error.extensions && error.extensions.data) {
+      tml.wh('extensions.data:')
+      console.info(error.extensions.data)
+    }
+    if (error.extensions && error.extensions.exception) {
+      tml.wh('extensions.exception.stacktrace')
+      console.info(error.extensions.exception.stacktrace)
+    }
+
     return error
   }
 

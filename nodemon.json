@@ -7,7 +7,7 @@
   "verbose": true,
   "watch": [
     "db",
-    "gql",
+    "apollo",
     "lib"
   ],
   "ext": "js,json"

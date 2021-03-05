@@ -5,44 +5,52 @@ const Team = require('./Team')
 
 const { ObjectId } = mongoose.Schema.Types
 
-const userSchema = new mongoose.Schema({
-  _id: { type: ObjectId, auto: true },
-  email: {
-    type: String,
-    unique: true,
-    required: true
+const userSchema = new mongoose.Schema(
+  {
+    _id: { type: ObjectId, auto: true },
+    email: {
+      type: String,
+      unique: true,
+      required: true
+    },
+    team: {
+      type: ObjectId,
+      ref: Team
+    },
+    password: String,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    active: { type: Boolean, default: true },
+    username: {
+      type: String,
+      default () {
+        return this.email.match(/^\w+/)[0]
+      }
+    },
+    basicGrant: { type: Boolean, default: true },
+    adminGrant: { type: Boolean, default: false }
+    // organisation: { type: ObjectId, ref: 'Organisation' },
+    // tokens: Array,
+    // branch: String,
+    // xero: {
+    //   allTenants: Array,
+    //   accessToken: {
+    //     id_token: String,
+    //     access_token: String,
+    //     expires_at: Date,
+    //     token_type: String,
+    //     refresh_token: String,
+    //     session_state: String
+    //   }
+    // }
   },
-  team: {
-    type: ObjectId,
-    ref: Team
-  },
-  password: String,
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  active: { type: Boolean, default: true },
-  username: {
-    type: String,
-    default () {
-      return this.email.match(/^\w+/)[0]
+  {
+    timestamps: true,
+    toObject: {
+      getters: true
     }
-  },
-  basicGrant: { type: Boolean, default: true },
-  adminGrant: { type: Boolean, default: false }
-  // organisation: { type: ObjectId, ref: 'Organisation' },
-  // tokens: Array,
-  // branch: String,
-  // xero: {
-  //   allTenants: Array,
-  //   accessToken: {
-  //     id_token: String,
-  //     access_token: String,
-  //     expires_at: Date,
-  //     token_type: String,
-  //     refresh_token: String,
-  //     session_state: String
-  //   }
-  // }
-}, { timestamps: true })
+  }
+)
 
 /**
  * Password hash middleware.

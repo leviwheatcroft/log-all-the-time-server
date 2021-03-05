@@ -6,7 +6,7 @@ const {
   readFileSync
 } = require('fs')
 
-const tml = require('../helpers/tml')
+const tml = require('../../lib/tml')
 const {
   midnightUtc
 } = require('../../lib/midnightUtc')
@@ -20,8 +20,6 @@ const {
   User,
   mongooseConnect
 } = require('../../db')
-
-
 
 let words
 

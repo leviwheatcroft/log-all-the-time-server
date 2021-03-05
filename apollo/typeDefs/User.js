@@ -2,7 +2,7 @@ const gql = require('graphql-tag')
 
 const User = gql`
 type User {
-  _id: ObjectId!
+  id: ObjectId!
   username: String!
 }
 `
