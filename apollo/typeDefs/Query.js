@@ -10,8 +10,8 @@ type Query {
     limit: Int
     dateFrom: DateMidnightUtc
     dateTo: DateMidnightUtc
-    tags: [ObjectId]
-    users: [ObjectId]
+    tags: [ObjectId!]
+    users: [ObjectId!]
   ): [Entry]!
   EntryFilterAsCsvQ(
     limit: Int

@@ -26,8 +26,8 @@ const EntryFilterQ = gql`
     $limit: Int
     $dateFrom: DateMidnightUtc
     $dateTo: DateMidnightUtc
-    $tags: [ObjectId]
-    $users: [ObjectId]
+    $tags: [ObjectId!]
+    $users: [ObjectId!]
   ) {
     EntryFilterQ(
       limit: $limit
@@ -89,4 +89,23 @@ test.serial('EntryFilterQ filter by user', async (t) => {
   t.truthy(allMatch)
   const totalDocs = await Entry.estimatedDocumentCount()
   t.truthy(entries.length < totalDocs)
+})
+test.serial('EntryFilterQ no dates', async (t) => {
+  const {
+    user: { id }
+  } = await Entry.findOne({}, null, { populate: 'user' })
+  const count = await Entry.countDocuments({
+    user: id
+  })
+  const result = await query({
+    query: EntryFilterQ,
+    variables: {
+      dateFrom: null,
+      dateTo: null,
+      users: [id],
+      limit: 256
+    }
+  })
+  const entries = result.data.EntryFilterQ
+  t.truthy(entries.length === count)
 })
