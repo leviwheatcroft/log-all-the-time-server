@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 require('dotenv-flow').config({ path: '../../' })
+const yargsParser = require('yargs-parser')
 const gql = require('graphql-tag')
 
 const tml = require('../../lib/tml')
@@ -18,7 +19,10 @@ const {
   randomWords
 } = require('../helpers/randomWords')
 
-async function repopulate () {
+async function createEntries (opts) {
+  const {
+    count = 24
+  } = opts
   const timer = new tml.Timer()
   tml.line()
   tml.bl(`starting mongoose: ${process.env.MONGODB_URI}`)
@@ -41,8 +45,6 @@ async function repopulate () {
       }
     }
   `
-
-  const count = process.argv[2] || 24
 
   const day = (24 * 60 * 60 * 1000)
   const midnight = midnightUtc(new Date())
@@ -107,4 +109,9 @@ async function repopulate () {
   tml.bl('stopped')
 }
 
-repopulate()
+if (require.main === module)
+  createEntries(yargsParser(process.argv.slice(2)))
+
+module.exports = {
+  createEntries
+}

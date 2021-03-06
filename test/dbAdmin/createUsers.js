@@ -20,8 +20,6 @@ async function createUser (opts) {
     count = 1,
     username = false
   } = opts
-  if (count > 1 && username)
-    throw new RangeError('can only create 1 user if username is specified')
   const timer = new tml.Timer()
   tml.line()
   tml.bl('starting mongoose', process.env.MONGODB_URI)
@@ -44,9 +42,9 @@ async function createUser (opts) {
     }
   `
 
-  const uniqueUserName = _uniqueRandomWord()
+  const uniqueUserName = _uniqueRandomWord(username)
   for (let i = 0; i < count; i += 1) {
-    const user = username || uniqueUserName.next().value
+    const user = uniqueUserName.next().value
     await mutate({
       mutation: UserRegisterM,
       variables: {

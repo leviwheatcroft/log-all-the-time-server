@@ -4,11 +4,14 @@ const {
 
 const wordsRaw = readFileSync(`${__dirname}/words.txt`, 'utf8')
 const wordsSplit = wordsRaw.split(' ')
+wordsSplit.pop()
 const wordsUnique = wordsSplit.filter((w, i) => {
   return i === wordsSplit.findIndex(((_w) => w === _w))
 })
 
-function* _uniqueRandomWord () {
+function* _uniqueRandomWord (first = false) {
+  if (first)
+    yield first
   const initialIdx = Math.floor(Math.random() * wordsUnique.length)
   let idx = initialIdx + 1
   while (idx !== initialIdx) {
