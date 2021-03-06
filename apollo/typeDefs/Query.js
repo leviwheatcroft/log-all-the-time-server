@@ -23,6 +23,9 @@ type Query {
   TagPartialQ(
     tagPartial: String
   ): [Tag]!
+  UserPartialQ(
+    userPartial: String
+  ): [User]!
   DurationByDayQ(
     dateFrom: Date!
     dateTo: Date!
