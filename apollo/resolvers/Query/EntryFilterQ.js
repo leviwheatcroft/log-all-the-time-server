@@ -15,7 +15,8 @@ const EntryFilterQ = createResolver(
       limit = 20,
       dateFrom,
       dateTo,
-      tags
+      tags,
+      users
     } = query
 
     const filter = {
@@ -26,7 +27,11 @@ const EntryFilterQ = createResolver(
           ...dateTo ? { $lte: dateTo } : {}
         }
       } : {},
-      ...tags && tags.length ? { tags: { $all: tags } } : {}
+      ...tags && tags.length ? { tags: { $all: tags } } : {},
+      // this is an "in" search, on each document, the user field is a single
+      // objectId, users here is an array of objectIds, so this
+      // { user: users } structure is "find docs with user id's in this array"
+      ...users && users.length ? { user: users } : {}
     }
 
     const entries = await Entry.find(
