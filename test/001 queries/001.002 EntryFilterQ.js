@@ -13,12 +13,15 @@ const gql = require('graphql-tag')
 const test = require('ava')
 
 const {
-  db: { createDb, Entry },
-  apollo: { query }
+  db: { createDb, Entry, User },
+  apollo: { query, setApolloContext }
 } = require('../helpers')
 
 test.before(async (t) => {
   await createDb('001 queries/001.002.archive')
+  const user = await User.findOne()
+  setApolloContext({ user })
+  t.context.user = user
 })
 
 const EntryFilterQ = gql`
@@ -29,6 +32,7 @@ const EntryFilterQ = gql`
     $dateTo: DateMidnightUtc
     $tags: [ObjectId!]
     $users: [ObjectId!]
+    $self: Boolean
   ) {
     EntryFilterQ(
       limit: $limit
@@ -37,6 +41,7 @@ const EntryFilterQ = gql`
       dateTo: $dateTo
       tags: $tags
       users: $users
+      self: $self
     ) {
       docs {
         id
@@ -71,6 +76,7 @@ test.serial('EntryFilterQ filter for single day', async (t) => {
   })
   const { docs: entries } = result.data.EntryFilterQ
   // console.log(entries)
+  t.truthy(entries.length)
   t.truthy(entries.every(({ date: _d }) => _d.valueOf() === date.valueOf()))
 })
 
@@ -145,4 +151,16 @@ test.serial('EntryFilterQ paging', async (t) => {
 
   t.truthy(first12.every((e, i) => e.id === all24[i].id))
   t.truthy(last12.every((e, i) => e.id === all24[i + 12].id))
+})
+test.serial('EntryFilterQ self', async (t) => {
+  const result = await query({
+    query: EntryFilterQ,
+    variables: {
+      self: true
+    }
+  })
+  const {
+    docs: entries
+  } = result.data.EntryFilterQ
+  t.truthy(entries.every((e) => e.user.id === t.context.user.id))
 })

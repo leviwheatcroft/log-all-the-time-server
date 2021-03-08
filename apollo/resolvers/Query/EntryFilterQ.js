@@ -17,23 +17,31 @@ const EntryFilterQ = createResolver(
       dateFrom,
       dateTo,
       tags,
-      users
+      users,
+      self = false
     } = query
+    const {
+      user
+    } = ctx
 
-    const filter = {
-      deleted: { $ne: true },
-      ...dateFrom || dateTo ? {
-        date: {
-          ...dateFrom ? { $gte: dateFrom } : {},
-          ...dateTo ? { $lte: dateTo } : {}
-        }
-      } : {},
-      ...tags && tags.length ? { tags: { $all: tags } } : {},
-      // this is an "in" search, on each document, the user field is a single
-      // objectId, users here is an array of objectIds, so this
-      // { user: users } structure is "find docs with user id's in this array"
-      ...users && users.length ? { user: users } : {}
+    const filter = {}
+    filter.deleted = { $ne: true }
+    filter.team = user.team
+    if (dateFrom || dateTo) {
+      filter.date = {
+        ...dateFrom ? { $gte: dateFrom } : {},
+        ...dateTo ? { $lte: dateTo } : {}
+      }
     }
+    if (tags && tags.length)
+      filter.tags = { tags: { $all: tags } }
+    // this is an "in" search, on each document, the user field is a single
+    // objectId, users here is an array of objectIds, so this
+    // { user: users } structure is "find docs with user id's in this array"
+    if (users && users.length)
+      filter.user = users
+    if (self)
+      filter.user = [user.id]
 
     const {
       docs,

@@ -6,6 +6,7 @@ const EntryFilterAsCsvQ = require('./EntryFilterAsCsvQ')
 const TagPartialQ = require('./TagPartialQ')
 const DurationByDayQ = require('./DurationByDayQ')
 const UserPartialQ = require('./UserPartialQ')
+const SelfQ = require('./SelfQ')
 
 const QueryMap = combineResolvers([
   UserQ,
@@ -14,7 +15,8 @@ const QueryMap = combineResolvers([
   EntryFilterAsCsvQ,
   TagPartialQ,
   DurationByDayQ,
-  UserPartialQ
+  UserPartialQ,
+  SelfQ
 ])
 
 module.exports = {

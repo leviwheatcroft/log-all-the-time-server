@@ -13,6 +13,7 @@ type Query {
     dateTo: DateMidnightUtc
     tags: [ObjectId!]
     users: [ObjectId!]
+    self: Boolean
   ): Page
   EntryFilterAsCsvQ(
     limit: Int
@@ -32,6 +33,7 @@ type Query {
     dateFrom: Date!
     dateTo: Date!
   ): [Duration]!
+  SelfQ: User!
 }
 `
 
