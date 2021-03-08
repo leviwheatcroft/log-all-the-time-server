@@ -12,6 +12,7 @@ const { Entry } = require('../../../db')
 const EntryFilterQ = createResolver(
   async (root, query, ctx) => {
     const {
+      offset = 0,
       limit = 20,
       dateFrom,
       dateTo,
@@ -34,17 +35,34 @@ const EntryFilterQ = createResolver(
       ...users && users.length ? { user: users } : {}
     }
 
-    const entries = await Entry.find(
+    const {
+      docs,
+      totalDocs
+    } = await Entry.paginate(
       filter,
-      null,
       {
         populate: ['tags', 'user'],
+        offset,
         limit,
         sort: { createdAt: 'desc' }
       }
     )
 
-    return entries.map((e) => e.toObject())
+    // const {
+    //   docs,
+    //   totalDocs,
+    //   hasPrevPage,
+    //   hasNextPage,
+    //   page,
+    //   totalPages,
+    //   prevPage,
+    //   nextPage
+    // } = result
+
+    const hasMore = (offset + limit) < totalDocs
+    // const entries = docs.map((e) => e.toObject())
+
+    return { docs, hasMore }
   }
 )
 

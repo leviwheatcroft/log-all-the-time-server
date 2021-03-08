@@ -7,12 +7,13 @@ type Query {
     limit: Int
   ): [Entry]!
   EntryFilterQ(
+    offset: Int
     limit: Int
     dateFrom: DateMidnightUtc
     dateTo: DateMidnightUtc
     tags: [ObjectId!]
     users: [ObjectId!]
-  ): [Entry]!
+  ): Page
   EntryFilterAsCsvQ(
     limit: Int
     dateFrom: DateMidnightUtc

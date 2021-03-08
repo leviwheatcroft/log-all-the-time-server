@@ -1,8 +1,8 @@
 const tml = require('../../lib/tml')
 
 const entryEndpoints = [
-  'EntryQ',
-  'EntryFilterQ'
+  'EntryQ'
+  // 'EntryFilterQ'
 ]
 
 async function logger (resolve, root, args, ctx, info) {

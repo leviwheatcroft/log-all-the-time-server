@@ -24,7 +24,14 @@ function formatError (error, quiet) {
   if (!quiet) {
     tml.line()
     tml.bl(`Error Code: ${code}`)
-    tml.wh(`Path: ${path}`)
+    if (path)
+      tml.wh(`Path: ${path}`)
+
+    if (code === 'INTERNAL_SERVER_ERROR')
+      tml.wh(`Message: ${error.message}`)
+
+    if (code === 'GRAPHQL_VALIDATION_FAILED')
+      tml.wh(`Message: ${error.message}`)
 
     if (data) {
       tml.wh('extensions.data:')

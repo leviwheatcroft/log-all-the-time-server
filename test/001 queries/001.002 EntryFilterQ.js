@@ -24,6 +24,7 @@ test.before(async (t) => {
 const EntryFilterQ = gql`
   query EntryFilterQ(
     $limit: Int
+    $offset: Int
     $dateFrom: DateMidnightUtc
     $dateTo: DateMidnightUtc
     $tags: [ObjectId!]
@@ -31,23 +32,27 @@ const EntryFilterQ = gql`
   ) {
     EntryFilterQ(
       limit: $limit
+      offset: $offset
       dateFrom: $dateFrom
       dateTo: $dateTo
       tags: $tags
       users: $users
     ) {
-      id
-      description
-      user {
+      docs {
         id
-        username
+        description
+        user {
+          id
+          username
+        }
+        date
+        duration
+        tags {
+          id
+          tagName
+        }
       }
-      date
-      duration
-      tags {
-        id
-        tagName
-      }
+      hasMore
     }
   }
 `
@@ -64,9 +69,11 @@ test.serial('EntryFilterQ filter for single day', async (t) => {
       dateTo: date.toISOString()
     }
   })
-  const entries = result.data.EntryFilterQ
+  const { docs: entries } = result.data.EntryFilterQ
+  // console.log(entries)
   t.truthy(entries.every(({ date: _d }) => _d.valueOf() === date.valueOf()))
 })
+
 test.serial('EntryFilterQ filter by user', async (t) => {
   const {
     user: { id }
@@ -78,7 +85,7 @@ test.serial('EntryFilterQ filter by user', async (t) => {
       users: [id]
     }
   })
-  const entries = result.data.EntryFilterQ
+  const { docs: entries } = result.data.EntryFilterQ
   t.truthy(entries.length > 0)
   const allMatch = entries.every((entry) => {
     const {
@@ -90,6 +97,7 @@ test.serial('EntryFilterQ filter by user', async (t) => {
   const totalDocs = await Entry.estimatedDocumentCount()
   t.truthy(entries.length < totalDocs)
 })
+
 test.serial('EntryFilterQ no dates', async (t) => {
   const {
     user: { id }
@@ -106,6 +114,35 @@ test.serial('EntryFilterQ no dates', async (t) => {
       limit: 256
     }
   })
-  const entries = result.data.EntryFilterQ
+  const { docs: entries } = result.data.EntryFilterQ
   t.truthy(entries.length === count)
+})
+
+test.serial('EntryFilterQ paging', async (t) => {
+  let result = await query({
+    query: EntryFilterQ,
+    variables: {
+      limit: 24
+    }
+  })
+  const { docs: all24 } = result.data.EntryFilterQ
+  result = await query({
+    query: EntryFilterQ,
+    variables: {
+      offset: 0,
+      limit: 12
+    }
+  })
+  const { docs: first12 } = result.data.EntryFilterQ
+  result = await query({
+    query: EntryFilterQ,
+    variables: {
+      offset: 12,
+      limit: 12
+    }
+  })
+  const { docs: last12 } = result.data.EntryFilterQ
+
+  t.truthy(first12.every((e, i) => e.id === all24[i].id))
+  t.truthy(last12.every((e, i) => e.id === all24[i + 12].id))
 })
