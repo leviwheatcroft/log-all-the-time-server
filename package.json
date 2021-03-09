@@ -1,5 +1,5 @@
 {
-  "name": "time-log-server",
+  "name": "log-all-the-time-server",
   "version": "1.1.0",
   "main": "index.js",
   "author": "Levi Wheatcroft <levi@wheatcroft.com.au>",
