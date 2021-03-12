@@ -6,7 +6,7 @@ type Mutation {
     username: String!
     password: String!
     email: String!
-  ): Boolean
+  ): Tokens!
   UserLoginM(
     email: String!
     password: String!

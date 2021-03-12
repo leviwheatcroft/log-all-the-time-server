@@ -5,6 +5,7 @@ const {
   User,
   Team
 } = require('../../../db')
+const { getTokens } = require('../../../lib/jwt')
 const {
   NewUserError
 } = require('../../../lib/errors')
@@ -16,7 +17,6 @@ const UserRegisterM = createResolver(
       password,
       username
     } = query
-
     let user = await User.findOne({ email })
 
     if (user && user.active) {
@@ -46,8 +46,7 @@ const UserRegisterM = createResolver(
     }
 
     await user.save()
-
-    return true
+    return getTokens(user)
   }
 )
 

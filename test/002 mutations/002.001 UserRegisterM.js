@@ -7,7 +7,7 @@ const test = require('ava')
 //   User,
 //   Team
 // } = require('../helpers/db')
-
+const check = require('check-types')
 const {
   db: { createDb, User, Team },
   apollo: { mutate, setApolloContext }
@@ -28,7 +28,10 @@ const UserRegisterM = gql`
       username: $username
       email: $email
       password: $password
-    )
+    ) {
+      accessToken
+      refreshToken
+    }
   }
 `
 
@@ -41,7 +44,9 @@ test.serial('UserRegisterM create new user', async (t) => {
       password: 'test'
     }
   })
-  t.is(result.data.UserRegisterM, true)
+  t.truthy(result.data.UserRegisterM)
+  t.truthy(check.string(result.data.UserRegisterM.refreshToken))
+  t.truthy(check.string(result.data.UserRegisterM.accessToken))
   const users = await User.find()
   t.is(users.length, 1)
   t.is(users[0].active, true)
@@ -74,7 +79,7 @@ test.serial('UserRegisterM reactivate user', async (t) => {
       password: 'test'
     }
   })
-  t.is(result.data.UserRegisterM, true)
+  t.truthy(result.data.UserRegisterM)
   const users = await User.find()
   t.is(users.length, 1)
 })
