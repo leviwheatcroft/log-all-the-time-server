@@ -1,5 +1,8 @@
 const { authWhitelist } = require('./authWhitelist')
 const {
+  AuthFailedError
+} = require('../../lib/errors')
+const {
   User
 } = require('../../db')
 
@@ -15,6 +18,12 @@ async function user (resolve, root, args, ctx, info) {
       userId
     } = jwt
     const user = await User.findOne({ _id: userId })
+    if (!user) {
+      throw new AuthFailedError(
+        'Token User does not exist.',
+        { data: { user } }
+      )
+    }
     ctx.user = user
   }
 
