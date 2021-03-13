@@ -26,35 +26,38 @@ test.before(async (t) => {
 
 const EntryFilterQ = gql`
   query EntryFilterQ(
-    $limit: Int
-    $offset: Int
     $dateFrom: DateMidnightUtc
     $dateTo: DateMidnightUtc
+    $limit: Int
+    $offset: Int
+    $self: Boolean
+    $sort: SortI
     $tags: [ObjectId!]
     $users: [ObjectId!]
-    $self: Boolean
   ) {
     EntryFilterQ(
-      limit: $limit
-      offset: $offset
       dateFrom: $dateFrom
       dateTo: $dateTo
+      limit: $limit
+      offset: $offset
+      self: $self
+      sort: $sort
       tags: $tags
       users: $users
-      self: $self
     ) {
       docs {
-        id
-        description
-        user {
-          id
-          username
-        }
+        createdAt
         date
+        description
         duration
+        id
         tags {
           id
           tagName
+        }
+        user {
+          id
+          username
         }
       }
       hasMore
@@ -163,4 +166,80 @@ test.serial('EntryFilterQ self', async (t) => {
     docs: entries
   } = result.data.EntryFilterQ
   t.truthy(entries.every((e) => e.user.id === t.context.user.id))
+})
+test.serial('EntryFilterQ sort by createdAt desc', async (t) => {
+  const result = await query({
+    query: EntryFilterQ,
+    variables: {
+      self: true,
+      sort: { createdAt: 'desc' }
+    }
+  })
+  const {
+    docs: entries
+  } = result.data.EntryFilterQ
+  let lastCreatedAt = Date.now()
+  t.truthy(entries.every((e) => {
+    if (lastCreatedAt < e.createdAt)
+      return false
+    lastCreatedAt = e.createdAt
+    return true
+  }))
+})
+test.serial('EntryFilterQ sort by createdAt asc', async (t) => {
+  const result = await query({
+    query: EntryFilterQ,
+    variables: {
+      self: true,
+      sort: { createdAt: 'asc' }
+    }
+  })
+  const {
+    docs: entries
+  } = result.data.EntryFilterQ
+  let lastCreatedAt = 0
+  t.truthy(entries.every((e) => {
+    if (lastCreatedAt > e.createdAt)
+      return false
+    lastCreatedAt = e.createdAt
+    return true
+  }))
+})
+test.serial('EntryFilterQ sort by date desc', async (t) => {
+  const result = await query({
+    query: EntryFilterQ,
+    variables: {
+      self: true,
+      sort: { date: 'desc' }
+    }
+  })
+  const {
+    docs: entries
+  } = result.data.EntryFilterQ
+  let lastDate = Date.now()
+  t.truthy(entries.every((e) => {
+    if (lastDate < e.date)
+      return false
+    lastDate = e.date
+    return true
+  }))
+})
+test.serial('EntryFilterQ sort by date asc', async (t) => {
+  const result = await query({
+    query: EntryFilterQ,
+    variables: {
+      self: true,
+      sort: { date: 'asc' }
+    }
+  })
+  const {
+    docs: entries
+  } = result.data.EntryFilterQ
+  let lastDate = 0
+  t.truthy(entries.every((e) => {
+    if (lastDate > e.date)
+      return false
+    lastDate = e.date
+    return true
+  }))
 })

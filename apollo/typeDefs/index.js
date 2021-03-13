@@ -1,10 +1,11 @@
 const { Duration } = require('./Duration')
 const { Entry } = require('./Entry')
-const { Page } = require('./Page')
 const { EntryI } = require('./EntryI')
 const { Mutation } = require('./Mutation')
+const { Page } = require('./Page')
 const { Query } = require('./Query')
 const { Scalars } = require('./Scalars')
+const { SortI } = require('./SortI')
 const { Tag } = require('./Tag')
 const { TagI } = require('./TagI')
 const { Token } = require('./Token')
@@ -14,16 +15,17 @@ const { User } = require('./User')
 const typeDefs = [
   Duration,
   Entry,
-  Page,
   EntryI,
   Mutation,
+  Page,
   Query,
   Scalars,
+  SortI,
   Tag,
   TagI,
   Token,
   Tokens,
-  User
+  User,
 ]
 
 module.exports = {

@@ -9,6 +9,7 @@ type Entry {
   duration: Int!
   deleted: Boolean
   tags: [Tag]
+  createdAt: Date!
 }
 `
 
