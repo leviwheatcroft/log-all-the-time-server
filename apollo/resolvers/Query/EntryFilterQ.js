@@ -18,7 +18,7 @@ const EntryFilterQ = createResolver(
       dateTo,
       tags,
       users,
-      sort = { date: 'desc' },
+      sort = { date: 'desc', createdAt: 'desc' },
       self = false
     } = query
     const {

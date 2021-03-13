@@ -2,14 +2,14 @@ const gql = require('graphql-tag')
 
 const Entry = gql`
 type Entry {
-  id: ObjectId
-  user: User!
-  description: String!
-  date: Date!
-  duration: Int!
-  deleted: Boolean
-  tags: [Tag]
   createdAt: Date!
+  date: Date!
+  deleted: Boolean
+  description: String!
+  duration: Int!
+  id: ObjectId
+  tags: [Tag]
+  user: User!
 }
 `
 
