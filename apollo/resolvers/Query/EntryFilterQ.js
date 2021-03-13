@@ -34,6 +34,7 @@ const EntryFilterQ = createResolver(
         ...dateTo ? { $lte: dateTo } : {}
       }
     }
+
     if (tags && tags.length)
       filter.tags = { tags: { $all: tags } }
     // this is an "in" search, on each document, the user field is a single

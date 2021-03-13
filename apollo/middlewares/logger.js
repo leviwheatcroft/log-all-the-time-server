@@ -1,8 +1,8 @@
 const tml = require('../../lib/tml')
 
 const entryEndpoints = [
-  'EntryQ'
-  // 'EntryFilterQ'
+  // 'EntryQ'
+  'EntryFilterQ'
 ]
 
 async function logger (resolve, root, args, ctx, info) {
@@ -19,7 +19,7 @@ async function logger (resolve, root, args, ctx, info) {
 
   if (entryEndpoints.includes(ctx.req.body.operationName)) {
     const table = new tml.Table()
-    result.forEach((e) => table.push(e))
+    result.docs.forEach((e) => table.push(e))
     table.write()
   } else {
     // eslint-disable-next-line no-console
