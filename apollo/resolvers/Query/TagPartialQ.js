@@ -12,7 +12,11 @@ const TagPartialQ = createResolver(
       limit = 24
     } = query
     // const _id = query._id || ctx.jwt.userId
-    const regExp = new RegExp(tagPartial, 'i')
+    const regExp = new RegExp(
+      // https://stackoverflow.com/a/35478115/441930
+      tagPartial.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&'),
+      'i'
+    )
 
     let tags = await Tag.find(
       {
