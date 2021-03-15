@@ -7,5 +7,8 @@ const {
 } = require('./db')
 
 Promise.all([apolloListen(), mongooseConnect()]).then(([{ url }]) => {
-  console.info(`🚀  Server ready at ${url}`)
+  if (process.env.NODE_ENV !== 'production')
+    console.info(`🚀  GraphQL ready at ${url}`)
+  else
+    console.info('🚀  GraphQL server listening')
 })
