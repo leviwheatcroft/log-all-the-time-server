@@ -1,5 +1,8 @@
 require('dotenv-flow').config()
 const {
+  info
+} = require('./lib/log')
+const {
   apolloListen
 } = require('./apollo')
 const {
@@ -8,7 +11,7 @@ const {
 
 Promise.all([apolloListen(), mongooseConnect()]).then(([{ url }]) => {
   if (process.env.NODE_ENV !== 'production')
-    console.info(`🚀  GraphQL ready at ${url}`)
+    info(`🚀  GraphQL ready at ${url}`)
   else
-    console.info('🚀  GraphQL server listening')
+    info('🚀  GraphQL server listening')
 })

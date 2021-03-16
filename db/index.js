@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-// const Log = require('./models/Log')
+const Log = require('./models/Log')
 const User = require('./models/User')
 const Entry = require('./models/Entry')
 const Tag = require('./models/Tag')
@@ -37,13 +37,7 @@ function mongooseConnect (uri) {
 }
 
 module.exports = {
-  // AccessToken,
-  // Batch,
-  // Contact,
-  // Invoice,
-  // Log,
-  // Message,
-  // Organisation,
+  Log,
   User,
   Entry,
   Tag,
