@@ -1,4 +1,7 @@
 const tml = require('../../lib/tml')
+const {
+  verbose
+} = require('../../lib/log')
 
 const entryEndpoints = [
   // 'EntryQ'
@@ -9,23 +12,32 @@ async function logger (resolve, root, args, ctx, info) {
   const {
     fieldName
   } = info
-  tml.line()
-  tml.bl(`Operation: ${ctx.req.body.operationName}`)
-  tml.bl(`FieldName: ${fieldName}`)
-  tml.inspect(ctx.req.body.variables)
-  const timer = new tml.Timer()
 
   const result = await resolve(root, args, ctx, info)
 
-  if (entryEndpoints.includes(ctx.req.body.operationName)) {
-    const table = new tml.Table()
-    result.docs.forEach((e) => table.push(e))
-    table.write()
+  if (process.env.NODE_ENV !== 'production') {
+    tml.line()
+    tml.bl(`Operation: ${ctx.req.body.operationName}`)
+    tml.bl(`FieldName: ${fieldName}`)
+    tml.inspect(ctx.req.body.variables)
+    const timer = new tml.Timer()
+
+    if (entryEndpoints.includes(ctx.req.body.operationName)) {
+      const table = new tml.Table()
+      result.docs.forEach((e) => table.push(e))
+      table.write()
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(result)
+    }
+    tml.bgBl(`elapsed: ${timer.elapsed()}`)
   } else {
-    // eslint-disable-next-line no-console
-    console.log(result)
+    verbose('qraphql operation', {
+      operation: ctx.req.body.operationName,
+      fieldName,
+      variables: ctx.req.body.varialbes
+    })
   }
-  tml.bgBl(`elapsed: ${timer.elapsed()}`)
 
   return result
 }

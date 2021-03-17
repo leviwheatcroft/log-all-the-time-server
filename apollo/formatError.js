@@ -1,7 +1,16 @@
-const tml = require('../lib/tml')
+// const tml = require('../lib/tml')
+const {
+  error,
+  verbose
+} = require('../lib/log')
+
+const reportableErrors = [
+  'INTERNAL_SERVER_ERROR',
+  'GRAPHQL_VALIDATION_FAILED'
+]
 
 // quiet is used when running tests. not used by apollo server
-function formatError (error, quiet) {
+function formatError (err, quiet) {
   const {
     message,
     path,
@@ -9,33 +18,43 @@ function formatError (error, quiet) {
       code,
       data,
       exposedData,
-      exception
+      // exception
     }
-  } = error
+  } = err
 
   if (!quiet) {
-    tml.line()
-    tml.bl(`Error Code: ${code}`)
-    if (path)
-      tml.wh(`Path: ${path}`)
-
-    if (code === 'INTERNAL_SERVER_ERROR') {
-      tml.wh(`Message: ${error.message}`)
-      tml.wh('extensions.exception.stacktrace')
-      console.info(exception.stacktrace)
+    const meta = {
+      code,
+      data,
+      exposedData,
+      path
     }
-
-    if (code === 'GRAPHQL_VALIDATION_FAILED')
-      tml.wh(`Message: ${error.message}`)
-
-    if (data) {
-      tml.wh('extensions.data:')
-      console.info(data)
-    }
-    if (exposedData) {
-      tml.wh('extensions.exposedData:')
-      console.info(exposedData)
-    }
+    if (reportableErrors.includes(code))
+      error(message, meta)
+    else
+      verbose(message, meta)
+    // tml.line()
+    // tml.bl(`Error Code: ${code}`)
+    // if (path)
+    //   tml.wh(`Path: ${path}`)
+    //
+    // if (code === 'INTERNAL_SERVER_ERROR') {
+    //   tml.wh(`Message: ${error.message}`)
+    //   tml.wh('extensions.exception.stacktrace')
+    //   console.info(exception.stacktrace)
+    // }
+    //
+    // if (code === 'GRAPHQL_VALIDATION_FAILED')
+    //   tml.wh(`Message: ${error.message}`)
+    //
+    // if (data) {
+    //   tml.wh('extensions.data:')
+    //   console.info(data)
+    // }
+    // if (exposedData) {
+    //   tml.wh('extensions.exposedData:')
+    //   console.info(exposedData)
+    // }
   }
 
   return {
