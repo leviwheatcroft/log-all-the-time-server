@@ -1,3 +1,5 @@
+require('dotenv-flow').config('../../')
+
 const gql = require('graphql-tag')
 const test = require('ava')
 
