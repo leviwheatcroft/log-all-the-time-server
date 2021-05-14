@@ -7,6 +7,7 @@ const TagPartialQ = require('./TagPartialQ')
 const DurationByDayQ = require('./DurationByDayQ')
 const UserPartialQ = require('./UserPartialQ')
 const SelfQ = require('./SelfQ')
+const TagQ = require('./TagQ')
 
 const QueryMap = combineResolvers([
   UserQ,
@@ -16,7 +17,8 @@ const QueryMap = combineResolvers([
   TagPartialQ,
   DurationByDayQ,
   UserPartialQ,
-  SelfQ
+  SelfQ,
+  TagQ
 ])
 
 module.exports = {

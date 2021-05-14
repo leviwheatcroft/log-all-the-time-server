@@ -46,18 +46,20 @@ const EntryFilterQ = gql`
       users: $users
     ) {
       docs {
-        createdAt
-        date
-        description
-        duration
-        id
-        tags {
+        ... on Entry {
+          createdAt
+          date
+          description
+          duration
           id
-          tagName
-        }
-        user {
-          id
-          username
+          tags {
+            id
+            tagName
+          }
+          user {
+            id
+            username
+          }
         }
       }
       hasMore

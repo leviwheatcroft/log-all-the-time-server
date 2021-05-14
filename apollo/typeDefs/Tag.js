@@ -4,6 +4,7 @@ const Tag = gql`
 type Tag {
   id: ObjectId!
   tagName: String!
+  archived: Boolean
 }
 `
 

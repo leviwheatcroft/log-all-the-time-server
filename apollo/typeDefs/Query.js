@@ -27,6 +27,11 @@ type Query {
   TagPartialQ(
     tagPartial: String
   ): [Tag]!
+  TagQ(
+    offset: Int
+    limit: Int
+    showArchived: Boolean
+  ): Page
   UserPartialQ(
     userPartial: String
   ): [User]!

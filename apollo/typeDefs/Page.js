@@ -2,7 +2,7 @@ const gql = require('graphql-tag')
 
 const Page = gql`
   type Page {
-    docs: [Entry]!
+    docs: [Doc]!
     hasMore: Boolean!
   }
 `

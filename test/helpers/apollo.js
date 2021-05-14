@@ -15,7 +15,10 @@ const {
 let _context = {}
 
 function setApolloContext (ctx) {
-  _context = ctx
+  _context = {
+    ..._context,
+    ...ctx
+  }
 }
 
 function context () {

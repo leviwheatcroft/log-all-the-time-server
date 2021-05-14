@@ -11,6 +11,7 @@ const { TagI } = require('./TagI')
 const { Token } = require('./Token')
 const { Tokens } = require('./Tokens')
 const { User } = require('./User')
+const { Doc } = require('./Doc')
 
 const typeDefs = [
   Duration,
@@ -26,6 +27,7 @@ const typeDefs = [
   Token,
   Tokens,
   User,
+  Doc
 ]
 
 module.exports = {

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const mongoosePaginate = require('mongoose-paginate-v2')
 const Team = require('./Team')
 
 const { ObjectId } = mongoose.Schema.Types
@@ -13,7 +14,8 @@ const tagSchema = new mongoose.Schema(
     team: {
       type: ObjectId,
       ref: Team
-    }
+    },
+    archived: Boolean
   },
   {
     timestamps: true,
@@ -22,6 +24,8 @@ const tagSchema = new mongoose.Schema(
     }
   }
 )
+
+tagSchema.plugin(mongoosePaginate)
 
 const Tag = mongoose.model('Tag', tagSchema)
 

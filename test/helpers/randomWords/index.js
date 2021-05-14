@@ -23,6 +23,14 @@ function* _uniqueRandomWord (first = false) {
   throw new RangeError('No more unique random words')
 }
 
+function uniqueRandomWords (count) {
+  const uniqueRandomWord = _uniqueRandomWord()
+  const words = []
+  for (let i = 0; i < count; i += 1)
+    words.push(uniqueRandomWord.next().value)
+  return words
+}
+
 function randomWord () {
   const idx = Math.floor(Math.random() * wordsUnique.length)
   return wordsUnique[idx]
@@ -36,5 +44,6 @@ function randomWords (count) {
 module.exports = {
   randomWord,
   randomWords,
-  _uniqueRandomWord
+  _uniqueRandomWord,
+  uniqueRandomWords
 }

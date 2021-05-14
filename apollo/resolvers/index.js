@@ -5,6 +5,7 @@ const { TokenMap } = require('./Token')
 const { DateMap } = require('./Date')
 const { DateMidnightUtcMap } = require('./DateMidnightUtc')
 const { ObjectIdMap } = require('./ObjectId')
+const { DocMap } = require('./Doc')
 
 const resolvers = combineResolvers([
   QueryMap,
@@ -12,7 +13,8 @@ const resolvers = combineResolvers([
   TokenMap,
   DateMap,
   DateMidnightUtcMap,
-  ObjectIdMap
+  ObjectIdMap,
+  DocMap
 ])
 
 module.exports = {

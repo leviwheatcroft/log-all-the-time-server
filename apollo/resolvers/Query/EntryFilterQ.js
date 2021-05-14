@@ -70,6 +70,7 @@ const EntryFilterQ = createResolver(
     // } = result
 
     const hasMore = (offset + limit) < totalDocs
+    // docs.forEach((doc) => { doc.__typename = 'Entry' })
     // const entries = docs.map((e) => e.toObject())
 
     return { docs, hasMore }

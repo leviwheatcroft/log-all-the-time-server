@@ -16,12 +16,17 @@ const {
   mongooseConnect
 } = require('../../db')
 const {
+  uniqueRandomWords,
   randomWords
 } = require('../helpers/randomWords')
+const {
+  disconnectLogger
+} = require('../../lib/log')
 
 async function createEntries (opts) {
   const {
-    count = 24
+    count = 24,
+    tagSetCount = 10
   } = opts
   const timer = new tml.Timer()
   tml.line()
@@ -50,8 +55,8 @@ async function createEntries (opts) {
   const midnight = midnightUtc(new Date())
   const dateStart = midnight.valueOf() - (day * 5)
   const dateRange = 10 // days
-  const tagSetA = randomWords(10).split(' ')
-  const tagSetB = randomWords(4).split(' ')
+  const tagSetA = uniqueRandomWords(tagSetCount)
+  const tagSetB = uniqueRandomWords(tagSetCount)
 
   function date () {
     const modifier = Math.floor(Math.random() * dateRange) * day
@@ -106,6 +111,7 @@ async function createEntries (opts) {
 
   tml.bl('stopping apollo & db')
   await db.disconnect()
+  disconnectLogger()
   tml.bl('stopped')
 }
 

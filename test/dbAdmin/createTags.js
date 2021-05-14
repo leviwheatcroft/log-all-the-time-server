@@ -14,9 +14,6 @@ const {
   _uniqueRandomWord
 } = require('../helpers/randomWords')
 const tml = require('../../lib/tml')
-const {
-  disconnectLogger
-} = require('../../lib/log')
 
 async function createUser (opts) {
   const {
@@ -41,10 +38,7 @@ async function createUser (opts) {
         username: $username
         password: $password
         email: $email
-      ) {
-        refreshToken
-        accessToken
-      }
+      )
     }
   `
 
@@ -67,7 +61,6 @@ async function createUser (opts) {
   tml.bl('stopping apollo & db')
   await server.stop()
   await db.disconnect()
-  disconnectLogger()
   tml.bl('stopped')
 }
 
