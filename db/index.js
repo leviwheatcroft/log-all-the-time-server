@@ -4,7 +4,7 @@ const {
 
 const modelDefinitions = require('./models')
 
-const sequelize = new Sequelize('postgres://latt:latt@127.0.0.1:5432/latt-db')
+const sequelize = new Sequelize(process.env.POSTGRES_URI)
 
 const models = Object.fromEntries(
   Object.entries(modelDefinitions).map(([name, { fields, options }]) => {
@@ -23,5 +23,6 @@ const dbInitialised = new Promise((resolve) => {
 
 module.exports = {
   dbInitialised,
+  sequelize,
   ...models
 }
