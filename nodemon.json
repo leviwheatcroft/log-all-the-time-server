@@ -1,0 +1,14 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules"
+  ],
+  "verbose": true,
+  "watch": [
+    "db",
+    "apollo",
+    "lib"
+  ],
+  "ext": "js,json"
+}
