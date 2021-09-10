@@ -14,7 +14,8 @@ const Log = {
       type: DataTypes.STRING,
     }
   },
-  options: {}
+  options: {},
+  associations () {}
 }
 
 module.exports = { Log }

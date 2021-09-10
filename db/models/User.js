@@ -21,7 +21,7 @@ const User = {
       type: DataTypes.BOOLEAN,
       defaultValue: true
     },
-    userName: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -34,7 +34,10 @@ const User = {
       defaultValue: false
     }
   },
-  options: {}
+  options: {},
+  associations ({ User, Team }) {
+    User.belongsTo(Team)
+  }
 }
 
 module.exports = { User }
