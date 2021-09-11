@@ -29,8 +29,28 @@ async function purge (opts) {
     throw new RangeError('you need to specify the mongo uri with --uri')
 
   await dbInitialised
-  await Promise.all(Object.values(sequelize.models).map((m) => m.drop()))
+  const {
+    Entry,
+    EntryTag,
+    Log,
+    Project,
+    Tag,
+    Team,
+    User
+  } = sequelize.models
 
+  // tables need to be dropped in the right order to avoid dropping dependencies
+  try {
+    await Log.drop()
+    await EntryTag.drop()
+    await Entry.drop()
+    await Project.drop()
+    await Tag.drop()
+    await User.drop()
+    await Team.drop()
+  } catch (err) {
+    pc.rd(err)
+  }
   pc.wh('done, shutting down')
   sequelize.close()
 }

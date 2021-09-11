@@ -34,11 +34,12 @@ const UserRegisterM = createResolver(
     if (user) {
       Object.assign(user, { username, password, active })
     } else {
+      const TeamId = team.get('id')
       user = User.build({
         active,
         email,
         password,
-        team,
+        TeamId,
         username
       })
     }

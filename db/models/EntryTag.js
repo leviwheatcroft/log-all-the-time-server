@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize')
 
-const Team = {
+const EntryTag = {
   fields: {
     active: {
       type: DataTypes.BOOLEAN,
@@ -11,14 +11,12 @@ const Team = {
   associations (models) {
     const {
       Entry,
-      User,
-      Team,
+      EntryTag,
       Tag
     } = models
-    Team.hasMany(User)
-    Team.hasMany(Tag)
-    Team.hasMany(Entry)
+    EntryTag.belongsTo(Entry)
+    EntryTag.belongsTo(Tag)
   }
 }
 
-module.exports = { Team }
+module.exports = { EntryTag }

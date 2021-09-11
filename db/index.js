@@ -4,7 +4,17 @@ const {
 
 const modelDefinitions = require('./models')
 
-const sequelize = new Sequelize(process.env.POSTGRES_URI)
+const sequelize = new Sequelize(
+  process.env.POSTGRES_URI,
+  {
+    logging (...log) {
+      if (!process.env.SEQUELIZE_LOG)
+        return
+      // eslint-disable-next-line no-console
+      console.log(log)
+    }
+  }
+)
 
 Object.entries(modelDefinitions).map(([name, { fields, options }]) => {
   return [name, sequelize.define(name, fields, options)]

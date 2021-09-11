@@ -7,6 +7,9 @@ type Mutation {
     password: String!
     email: String!
   ): Tokens!
+  EntryCreateM(
+    entry: EntryI!
+  ): Entry!
 }
 `
 
