@@ -45,7 +45,7 @@ const UserRegisterM = createResolver(
     }
 
     await user.save()
-    return getTokens(user)
+    return getTokens(user.get())
   }
 )
 

@@ -4,9 +4,9 @@ const {
 } = require('apollo-resolvers')
 
 const MutationMap = combineResolvers([
-  // require('./UserLoginM'),
+  require('./UserLoginM'),
   require('./UserRegisterM'),
-  // require('./UserRefreshM'),
+  require('./UserRefreshM'),
   require('./EntryCreateM'),
   // require('./EntryDeleteM')
 ])

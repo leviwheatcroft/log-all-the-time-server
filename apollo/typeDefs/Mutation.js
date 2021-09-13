@@ -10,6 +10,13 @@ type Mutation {
   EntryCreateM(
     entry: EntryI!
   ): Entry!
+  UserLoginM(
+    email: String!
+    password: String!
+  ): Tokens!
+  UserRefreshM(
+    refreshToken: String!
+  ): Token!
 }
 `
 
