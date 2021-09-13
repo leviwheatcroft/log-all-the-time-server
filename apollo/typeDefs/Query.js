@@ -3,6 +3,9 @@ const gql = require('graphql-tag')
 const Query = gql`
 type Query {
   SelfQ: User!
+  TagPartialQ(
+    tagPartial: String
+  ): [Tag]!
 }
 `
 
