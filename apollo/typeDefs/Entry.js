@@ -4,7 +4,7 @@ const Entry = gql`
 type Entry {
   createdAt: Date!
   date: Date!
-  deleted: Boolean
+  active: Boolean
   description: String!
   duration: Int!
   id: Int

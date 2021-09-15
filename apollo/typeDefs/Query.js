@@ -6,6 +6,9 @@ type Query {
   TagPartialQ(
     tagPartial: String
   ): [Tag]!
+  ProjectPartialQ(
+    projectPartial: String
+  ): [Project]!
 }
 `
 

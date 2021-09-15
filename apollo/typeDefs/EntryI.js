@@ -5,7 +5,7 @@ input EntryI {
   description: String!
   date: DateMidnightUtc!
   duration: Int!
-  deleted: Boolean
+  active: Boolean
   project: ProjectI!
   tags: [TagI]!
 }
