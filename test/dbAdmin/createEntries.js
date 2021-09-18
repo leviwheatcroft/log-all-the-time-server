@@ -1,5 +1,9 @@
 /* eslint-disable no-console */
-require('dotenv-flow').config({ path: `${__dirname}/../../` })
+const dotEnvFlow = require('dotenv-flow')
+
+dotEnvFlow.config({ path: `${__dirname}/../../` })
+dotEnvFlow.load(`${__dirname}/../../.env.sqlite`)
+
 const yargsParser = require('yargs-parser')
 const gql = require('graphql-tag')
 
@@ -12,9 +16,8 @@ const {
   setApolloContext
 } = require('../helpers/apollo')
 const {
-  User,
-  dbInitialised,
-  sequelize
+  sqlInitialised,
+  User
 } = require('../../db')
 const {
   uniqueRandomWords,
@@ -29,8 +32,8 @@ async function createEntries (opts) {
   } = opts
   const timer = new pc.Timer()
   pc.line()
-  pc.bl(`starting mongoose: ${process.env.MONGODB_URI}`)
-  await dbInitialised
+  pc.bl('starting db')
+  const sql = await sqlInitialised
 
   const EntryCreateM = gql`
     mutation EntryCreateM($entry: EntryI!) {
@@ -116,7 +119,7 @@ async function createEntries (opts) {
   table.write()
 
   pc.bl('stopping apollo & db')
-  await sequelize.close()
+  await sql.close()
   pc.bl('stopped')
 }
 

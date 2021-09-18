@@ -1,3 +1,4 @@
 node_modules
 postgres
 tests/entries.json
+db.sqlite

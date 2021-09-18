@@ -1,5 +1,7 @@
-const { apollo } = require('./apollo')
+const apollo = require('./apollo')
+const db = require('./db')
 
 module.exports = {
-  apollo
+  apollo,
+  db
 }

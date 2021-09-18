@@ -9,6 +9,16 @@ type Query {
   ProjectPartialQ(
     projectPartial: String
   ): [Project]!
+  EntryFilterQ(
+    dateFrom: DateMidnightUtc
+    dateTo: DateMidnightUtc
+    limit: Int
+    offset: Int
+    self: Boolean
+    tags: [Int!]
+    users: [Int!]
+    order: OrderI
+  ): Page
 }
 `
 

@@ -7,7 +7,7 @@ const DateMap = {
     name: 'Date',
     description: 'Custom Date Scalar',
     serialize (value) {
-      return value.getTime()
+      return value.valueOf()
     },
     parseValue (value) {
       return new Date(value)

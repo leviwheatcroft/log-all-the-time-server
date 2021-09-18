@@ -1,7 +1,7 @@
 const { combineResolvers } = require('apollo-resolvers')
 // const UserQ = require('./UserQ')
 // const EntryQ = require('./EntryQ')
-// const EntryFilterQ = require('./EntryFilterQ')
+const EntryFilterQ = require('./EntryFilterQ')
 // const EntryFilterAsCsvQ = require('./EntryFilterAsCsvQ')
 const TagPartialQ = require('./TagPartialQ')
 const ProjectPartialQ = require('./ProjectPartialQ')
@@ -13,7 +13,7 @@ const SelfQ = require('./SelfQ')
 const QueryMap = combineResolvers([
   // UserQ,
   // EntryQ,
-  // EntryFilterQ,
+  EntryFilterQ,
   // EntryFilterAsCsvQ,
   TagPartialQ,
   ProjectPartialQ,

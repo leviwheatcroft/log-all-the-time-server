@@ -1,12 +1,15 @@
-require('dotenv-flow').config({ path: `${__dirname}/../../` })
+const dotEnvFlow = require('dotenv-flow')
+
+dotEnvFlow.config({ path: `${__dirname}/../../` })
+dotEnvFlow.load(`${__dirname}/../../.env.sqlite`)
+
 const yargsParser = require('yargs-parser')
 const {
   createTestClient
 } = require('apollo-server-testing')
 const gql = require('graphql-tag')
 const {
-  dbInitialised,
-  sequelize
+  sqlInitialised
 } = require('../../db')
 const {
   apolloListen
@@ -23,7 +26,7 @@ async function createUser (opts) {
   } = opts
   const timer = new pc.Timer()
   pc.line()
-  await dbInitialised
+  const sql = await sqlInitialised
   pc.bl('starting apollo')
   const { server } = await apolloListen({ includeMiddlewares: false })
   const { mutate } = createTestClient(server)
@@ -63,7 +66,7 @@ async function createUser (opts) {
 
   pc.bl('stopping apollo & db')
   await server.stop()
-  await sequelize.close()
+  await sql.close()
   pc.bl('stopped')
 }
 
