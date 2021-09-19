@@ -36,9 +36,10 @@ const EntryFilterQ = gql`
     $offset: Int
     $self: Boolean
     $order: OrderI
+    $project: Int
     $tags: [Int!]
     $users: [Int!]
-  ) {
+    ) {
     EntryFilterQ(
       dateFrom: $dateFrom
       dateTo: $dateTo
@@ -47,26 +48,31 @@ const EntryFilterQ = gql`
       self: $self
       order: $order
       tags: $tags
+      project: $project
       users: $users
     ) {
-      docs {
-        ... on Entry {
-          createdAt
-          date
-          description
-          duration
+    docs {
+      ... on Entry {
+        createdAt
+        date
+        description
+        duration
+        id
+        project {
+          id,
+          projectName
+        }
+        tags {
           id
-          tags {
-            id
-            tagName
-          }
-          user {
-            id
-            username
-          }
+          tagName
+        }
+        user {
+          id
+          username
         }
       }
-      hasMore
+    }
+    hasMore
     }
   }
 `
@@ -120,6 +126,24 @@ test.serial('EntryFilterQ no dates', async (t) => {
       dateFrom: null,
       dateTo: null,
       users: [UserId],
+      limit: 256
+    }
+  })
+  const { docs: entries } = result.data.EntryFilterQ
+  t.truthy(entries.length === count)
+})
+
+test.serial('EntryFilterQ project', async (t) => {
+  const {
+    ProjectId
+  } = await Entry.findOne()
+  const count = await Entry.count({
+    where: { ProjectId }
+  })
+  const result = await query({
+    query: EntryFilterQ,
+    variables: {
+      project: ProjectId,
       limit: 256
     }
   })

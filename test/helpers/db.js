@@ -5,6 +5,7 @@ const {
   User,
   Entry,
   Team,
+  Project,
   sqlInitialised
 } = require('../../db')
 
@@ -26,6 +27,7 @@ module.exports = {
   User,
   Entry,
   Team,
+  Project,
   sqlInitialised,
   sqlUp
 }

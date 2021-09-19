@@ -15,6 +15,7 @@ type Query {
     limit: Int
     offset: Int
     self: Boolean
+    project: Int
     tags: [Int!]
     users: [Int!]
     order: OrderI

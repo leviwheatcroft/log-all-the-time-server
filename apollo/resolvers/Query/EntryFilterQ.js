@@ -11,7 +11,8 @@ const {
   Entry,
   EntryTag,
   Tag,
-  User
+  User,
+  Project
 } = require('../../../db')
 
 const EntryFilterQ = createResolver(
@@ -21,6 +22,7 @@ const EntryFilterQ = createResolver(
       limit = 20,
       dateFrom,
       dateTo,
+      project,
       tags,
       users,
       order: _order = { date: 'desc', createdAt: 'desc' },
@@ -39,6 +41,7 @@ const EntryFilterQ = createResolver(
     const where = {
       active: true,
       TeamId: user.TeamId,
+      ...project ? { ProjectId: project } : {},
       ..._users ? { UserId: { [Op.in]: users } } : {},
       ...self ? { UserId: user.id } : {},
       ...dateFrom || dateTo ? {
@@ -63,6 +66,9 @@ const EntryFilterQ = createResolver(
       },
       {
         model: User
+      },
+      {
+        model: Project
       }
     ]
 
@@ -77,10 +83,11 @@ const EntryFilterQ = createResolver(
       limit,
     })
 
-    // console.log(docs)
+    console.log(rows[0])
     const docs = rows.map((entry) => {
       return {
         ...entry.get(),
+        project: entry.Project.get(),
         date: dayjs(entry.date),
         user: entry.User.get(),
         tags: entry.EntryTags.map(({ Tag }) => Tag.get())
