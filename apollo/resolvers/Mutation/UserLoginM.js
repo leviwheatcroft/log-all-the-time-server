@@ -1,6 +1,7 @@
 const {
   createResolver
 } = require('apollo-resolvers')
+const bcrypt = require('bcrypt')
 // const validator = require('validator')
 const { User } = require('../../../db')
 const { getTokens } = require('../../../lib/jwt')
@@ -17,7 +18,11 @@ const UserLoginM = createResolver(
       password
     } = query
 
-    const user = await User.findOne({ email: email.toLowerCase() })
+    const user = await User.findOne({
+      where: {
+        email: email.toLowerCase()
+      }
+    })
     if (!user) {
       throw new AuthBadEmailError(
         'There\'s no user with that email address',
@@ -25,7 +30,9 @@ const UserLoginM = createResolver(
       )
     }
 
-    if (!await user.comparePassword(password)) {
+    const passwordOk = await bcrypt.compare(password, user.get('password'))
+
+    if (!passwordOk) {
       throw new AuthBadPasswordError(
         'That password is incorrect'
       )

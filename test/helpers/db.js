@@ -11,6 +11,8 @@ const {
 
 async function sqlUp (dump) {
   const sql = await sqlInitialised
+  if (!dump)
+    return
   const queries = await readFile(`${__dirname}/../${dump}`, 'utf-8')
   // eslint-disable-next-line no-restricted-syntax
   for (const query of queries.split(/\n/)) {

@@ -2,7 +2,10 @@
 
 export default {
   files: [
-    'test/001 queries/*.js',
+    // 'test/001 queries/*.js',
+    'test/002 mutations/002.001*.js',
+    'test/002 mutations/002.002*.js',
+    'test/002 mutations/002.003*.js',
     // 'test/002 mutations/*.js',
     // 'test/003 scalars/*.js'
   ],

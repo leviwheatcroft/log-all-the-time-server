@@ -28,8 +28,11 @@ const connectionParams = {
 
 const sequelize = new Sequelize(connectionParams)
 
-Object.entries(modelDefinitions).map(([name, { fields, options }]) => {
-  return [name, sequelize.define(name, fields, options)]
+Object.entries(modelDefinitions).map(([name, definition]) => {
+  const { fields, options, instanceMethods } = definition
+  const Model = sequelize.define(name, fields, options)
+  Object.assign(Model.prototype, instanceMethods)
+  return [name, Model]
 })
 
 Object.values(modelDefinitions).forEach(({ associations }) => {

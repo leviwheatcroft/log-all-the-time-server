@@ -3,7 +3,7 @@ const {
 } = require('apollo-resolvers')
 const jwt = require('jsonwebtoken')
 const {
-  AuthRefreshTimeout
+  AuthRefreshTimeoutError
 } = require('../../../lib/errors')
 // const validator = require('validator')
 const { User } = require('../../../db')
@@ -25,7 +25,7 @@ const UserRefreshM = createResolver(
     } = jwt.verify(refreshToken, JWT_SECRET)
 
     if (Date.parse(expiresAt) < Date.now())
-      throw new AuthRefreshTimeout('refreshToken has expired')
+      throw new AuthRefreshTimeoutError('refreshToken has expired')
 
     const user = await User.findOne({ where: { id: userId } })
     if (!user) {
