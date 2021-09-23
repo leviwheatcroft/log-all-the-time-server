@@ -34,6 +34,18 @@ const User = {
     adminGrant: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
+    },
+    gravatar: {
+      type: DataTypes.VIRTUAL,
+      get () {
+        // by default the size returned is 80 x 80px
+        // you can request different sizes by adding &s=${size} to the end as in
+        // https://gravatar.com/avatar/xxx?d=retro&s=200
+        // see:
+        // https://en.gravatar.com/site/implement/images/
+        const md5 = crypto.createHash('md5').update(this.email).digest('hex')
+        return `https://gravatar.com/avatar/${md5}?d=retro`
+      }
     }
   },
   options: {
@@ -50,10 +62,6 @@ const User = {
     comparePassword (candidatePassword) {
       // returns promise, can `await user.comparePassword()`
       return bcrypt.compare(candidatePassword, this.password)
-    },
-    getGravatar (size = 200) {
-      const md5 = crypto.createHash('md5').update(this.email).digest('hex')
-      return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`
     }
   },
   associations ({ User, Team }) {

@@ -83,14 +83,14 @@ const EntryFilterQ = createResolver(
       limit,
     })
 
-    console.log(rows[0])
+    // console.log(rows[0])
     const docs = rows.map((entry) => {
       return {
         ...entry.get(),
         project: entry.Project.get(),
         date: dayjs(entry.date),
         user: entry.User.get(),
-        tags: entry.EntryTags.map(({ Tag }) => Tag.get())
+        tags: entry.EntryTags.map(({ Tag }) => Tag.get()),
       }
     })
 
