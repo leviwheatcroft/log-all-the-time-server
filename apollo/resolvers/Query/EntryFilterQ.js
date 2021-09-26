@@ -3,10 +3,6 @@ const {
   createResolver
 } = require('apollo-resolvers')
 const { Op } = require('sequelize')
-// const { default: asyncPool } = require('tiny-async-pool')
-// const {
-//   Tag
-// } = require('../../../db')
 const {
   Entry,
   EntryTag,

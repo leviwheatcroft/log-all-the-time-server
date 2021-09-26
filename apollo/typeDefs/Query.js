@@ -20,6 +20,10 @@ type Query {
     users: [Int!]
     order: OrderI
   ): Page
+  DaySummariesQ(
+    dateFrom: DateMidnightUtc
+    dateTo: DateMidnightUtc
+  ): DaySummaries
 }
 `
 

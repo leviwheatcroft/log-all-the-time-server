@@ -14,9 +14,14 @@ const { Token } = require('./Token')
 const { Tokens } = require('./Tokens')
 const { User } = require('./User')
 const { Doc } = require('./Doc')
+const { ProjectSummary } = require('./ProjectSummary')
+const { DaySummary } = require('./DaySummary')
+const { DaySummaries } = require('./DaySummaries')
 
 const typeDefs = [
   // Duration,
+  DaySummary,
+  DaySummaries,
   Entry,
   EntryI,
   Mutation,
@@ -28,6 +33,7 @@ const typeDefs = [
   TagI,
   Project,
   ProjectI,
+  ProjectSummary,
   Token,
   Tokens,
   User,

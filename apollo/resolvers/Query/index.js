@@ -9,6 +9,7 @@ const ProjectPartialQ = require('./ProjectPartialQ')
 // const UserPartialQ = require('./UserPartialQ')
 const SelfQ = require('./SelfQ')
 // const TagQ = require('./TagQ')
+const DaySummariesQ = require('./DaySummariesQ')
 
 const QueryMap = combineResolvers([
   // UserQ,
@@ -17,6 +18,7 @@ const QueryMap = combineResolvers([
   // EntryFilterAsCsvQ,
   TagPartialQ,
   ProjectPartialQ,
+  DaySummariesQ,
   // DurationByDayQ,
   // UserPartialQ,
   SelfQ,
