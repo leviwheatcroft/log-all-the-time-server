@@ -29,9 +29,18 @@ const connectionParams = {
 const sequelize = new Sequelize(connectionParams)
 
 Object.entries(modelDefinitions).map(([name, definition]) => {
-  const { fields, options, instanceMethods } = definition
+  const {
+    fields,
+    options,
+    instanceMethods,
+    staticMethods
+  } = definition
   const Model = sequelize.define(name, fields, options)
-  Object.assign(Model.prototype, instanceMethods)
+  Object.assign(
+    Model.prototype,
+    instanceMethods
+  )
+  Object.assign(Model, staticMethods)
   return [name, Model]
 })
 

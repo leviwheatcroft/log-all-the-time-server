@@ -1,13 +1,10 @@
-const { DataTypes } = require('sequelize')
+// const { DataTypes } = require('sequelize')
 
 const Team = {
-  fields: {
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
-    }
+  fields: {},
+  options: {
+    paranoid: true,
   },
-  options: {},
   associations (models) {
     const {
       Entry,

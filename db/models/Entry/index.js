@@ -1,11 +1,10 @@
 const { DataTypes } = require('sequelize')
+const { toGql } = require('./toGql')
+const { withIncludes } = require('./withIncludes')
+const { associateTags } = require('./associateTags')
 
 const Entry = {
   fields: {
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
-    },
     date: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -18,7 +17,16 @@ const Entry = {
       type: DataTypes.INTEGER,
     },
   },
-  options: {},
+  options: {
+    paranoid: true,
+  },
+  staticMethods: {
+    withIncludes
+  },
+  instanceMethods: {
+    associateTags,
+    toGql
+  },
   associations (models) {
     const {
       Entry,

@@ -1,13 +1,12 @@
-const { DataTypes } = require('sequelize')
+// const { DataTypes } = require('sequelize')
+const { reconcile } = require('./reconcile')
 
 const EntryTag = {
-  fields: {
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
-    }
-  },
+  fields: {},
   options: {},
+  staticMethods: {
+    reconcile
+  },
   associations (models) {
     const {
       Entry,

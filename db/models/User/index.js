@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const { DataTypes } = require('sequelize')
+const { toGql } = require('./toGql')
+const { comparePassword } = require('./comparePassword')
 
 const User = {
   fields: {
@@ -18,10 +20,6 @@ const User = {
     },
     passwordResetExpires: {
       type: DataTypes.DATE
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
     },
     username: {
       type: DataTypes.STRING,
@@ -49,6 +47,7 @@ const User = {
     }
   },
   options: {
+    paranoid: true,
     hooks: {
       async beforeSave (user, options) {
         if (user.changed('password')) {
@@ -59,10 +58,8 @@ const User = {
     }
   },
   instanceMethods: {
-    comparePassword (candidatePassword) {
-      // returns promise, can `await user.comparePassword()`
-      return bcrypt.compare(candidatePassword, this.password)
-    }
+    comparePassword,
+    toGql
   },
   associations ({ User, Team }) {
     User.belongsTo(Team)

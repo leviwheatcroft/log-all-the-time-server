@@ -3,6 +3,9 @@ const {
   error,
   verbose
 } = require('../lib/log')
+const {
+  rd
+} = require('../lib/prettyConsole')
 
 const reportableErrors = [
   'INTERNAL_SERVER_ERROR',
@@ -18,7 +21,10 @@ function formatError (err, quiet) {
       code,
       data,
       exposedData,
-      // exception
+      exception: {
+        stacktrace,
+        sql
+      }
     }
   } = err
 
@@ -29,10 +35,18 @@ function formatError (err, quiet) {
       exposedData,
       path
     }
-    if (reportableErrors.includes(code))
+    if (reportableErrors.includes(code)) {
       error(message, meta)
-    else
+      // exception.stacktrace requires debug: true in apollo server constructor
+      // eslint-disable-next-line no-console
+      if (sql)
+        rd(sql)
+      stacktrace.forEach((line) => rd(line))
+      // console.error('stack', exception.stacktrace)
+      // if (process.env.NODE_ENV === 'test')
+    } else {
       verbose(message, meta)
+    }
     // tml.line()
     // tml.bl(`Error Code: ${code}`)
     // if (path)

@@ -14,7 +14,9 @@ const Log = {
       type: DataTypes.STRING,
     }
   },
-  options: {},
+  options: {
+    paranoid: true,
+  },
   associations () {}
 }
 

@@ -33,7 +33,8 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context,
-  formatError
+  formatError,
+  debug: true // ensures all errors have extenstions.exception.stacktrace
 })
 
 const { query, mutate } = createTestClient(server)

@@ -8,7 +8,7 @@ const MutationMap = combineResolvers([
   require('./UserRegisterM'),
   require('./UserRefreshM'),
   require('./EntryCreateM'),
-  // require('./EntryDeleteM')
+  require('./EntryUpdateM')
 ])
 
 module.exports = {

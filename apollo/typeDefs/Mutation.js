@@ -7,9 +7,6 @@ type Mutation {
     password: String!
     email: String!
   ): Tokens!
-  EntryCreateM(
-    entry: EntryI!
-  ): Entry!
   UserLoginM(
     email: String!
     password: String!
@@ -17,6 +14,12 @@ type Mutation {
   UserRefreshM(
     refreshToken: String!
   ): Token!
+  EntryCreateM(
+    entry: EntryI!
+  ): Entry!
+  EntryUpdateM(
+    entry: EntryI!
+  ): Entry!
 }
 `
 

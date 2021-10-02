@@ -4,9 +4,7 @@ const {
 
 const {
   Entry,
-  Tag,
   Project,
-  EntryTag
 } = require('../../../db')
 
 const EntryCreateM = createResolver(
@@ -15,8 +13,10 @@ const EntryCreateM = createResolver(
       date,
       duration,
       description,
-      project,
-      tags
+    } = query.entry
+    let {
+      tags,
+      project
     } = query.entry
     const {
       user
@@ -26,29 +26,8 @@ const EntryCreateM = createResolver(
       TeamId
     } = user
 
-    // create or populate tags
-    // eslint-disable-next-line no-restricted-syntax
-    for await (const tag of tags) {
-      if (!tag.id) {
-        const { tagName } = tag
-        let [_tag] = await Tag.findOrCreate({
-          where: { TeamId, tagName }
-        })
-        if (!_tag.get('active'))
-          _tag = await _tag.update({ active: true })
-        Object.assign(tag, _tag.get())
-      }
-    }
-    // create or populate project
-    if (!project.id) {
-      const { projectName } = project
-      let [_project] = await Project.findOrCreate({
-        where: { TeamId, projectName }
-      })
-      if (!_project.active)
-        _project = await _project.update({ active: true })
-      Object.assign(project, _project.get())
-    }
+    const $project = await Project.findCreateUnarchive(project, ctx)
+    project = $project.toGql()
 
     // create entry
     const ProjectId = project.id
@@ -61,16 +40,10 @@ const EntryCreateM = createResolver(
       duration,
     })
 
-    // associate tags
-    const EntryId = entry.id
-    await EntryTag.bulkCreate(tags.map((t) => ({ TagId: t.id, EntryId })))
+    const $tags = await entry.associateTags(tags, ctx)
+    tags = $tags.map(($tag) => $tag.toGql())
 
-    const response = {
-      ...entry.get(),
-      user,
-      project,
-      tags
-    }
+    const response = entry.toGql({ user, project, tags })
 
     return response
   }
