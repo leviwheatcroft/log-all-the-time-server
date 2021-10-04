@@ -3,8 +3,7 @@ const {
 } = require('apollo-resolvers')
 const { Op } = require('sequelize')
 const {
-  Entry,
-  Project
+  Entry
 } = require('../../../db')
 
 const DaySummariesQ = createResolver(
@@ -18,24 +17,27 @@ const DaySummariesQ = createResolver(
     } = ctx
 
     const where = {
-      active: true,
       UserId: user.id,
       date: {
         [Op.gte]: dateFrom,
         [Op.lte]: dateTo
       }
     }
-    const include = [
-      {
-        model: Project
-      }
-    ]
 
-    const entries = await Entry.findAll({ where, include })
+    // TODO:
+    // some sort of limit
+
+    const $entries = await Entry.findAll(Entry.withIncludes(
+      { where },
+      {
+        tags: false,
+        user: false
+      }
+    ))
 
     const daySummariesById = {}
 
-    entries.forEach(({ Project, date, duration }) => {
+    $entries.forEach(({ Project, date, duration }) => {
       const {
         id: projectSummaryId,
         projectName

@@ -29,7 +29,6 @@ const EntryCreateM = gql`
     ) {
       createdAt
       date
-      deletedAt
       description
       duration
       id

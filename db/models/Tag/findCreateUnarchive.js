@@ -18,14 +18,18 @@ async function findCreateUnarchive (tags, ctx) {
       id,
       tagName
     } = tag
-    const [$tag] = await Tag.upsert({
-      ...id ? { id } : {},
-      tagName,
-      TeamId,
-      archived: false
-    })
+    let $tag
+    if (id)
+      $tag = await Tag.findOne({ where: { id } })
+    else
+      [$tag] = await Tag.findOrCreate({ where: { tagName, TeamId } })
+    if ($tag.archived) {
+      $tag.archived = false
+      await $tag.save()
+    }
     $tags.push($tag)
   }
+
   return $tags
 }
 

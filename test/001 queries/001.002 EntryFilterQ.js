@@ -1,7 +1,7 @@
 /* ================================================================== fixture ==
-rm db.sqlite
-node test/dbAdmin/createUsers.js --username=test --count=12
-node test/dbAdmin/createEntries.js --count=256
+rm db.sqlite && \
+node test/dbAdmin/createUsers.js --username=test --count=12 && \
+node test/dbAdmin/createEntries.js --count=256 && \
 sqlite3 db.sqlite '.dump' > test/001\ queries/001.002.sql
 */
 // require('dotenv-flow').config({ path: `${__dirname}/../../` })
