@@ -34,15 +34,15 @@ const EntryCreateM = gql`
       id
       project {
         id
-        projectName
+        name
       }
       tags {
         id
-        tagName
+        name
       }
       user {
         id
-        username
+        name
         gravatar
       }
     }
@@ -58,7 +58,7 @@ test.serial('EntryCreateM basic', async (t) => {
         description: 'description',
         date: new Date(midnightUtcMs),
         duration: 15,
-        project: { projectName: 'projectName' },
+        project: { name: 'projectName' },
         tags: []
       }
     }

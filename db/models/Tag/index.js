@@ -9,15 +9,15 @@ const Tag = {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
-    tagName: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: 'tagNameByTeamId'
+      unique: 'nameByTeamId'
     },
     TeamId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: 'tagNameByTeamId'
+      unique: 'nameByTeamId'
     }
   },
   options: {

@@ -40,7 +40,7 @@ query DaySummariesQ(
       dayDuration
       projectSummaries {
         id
-        projectName
+        name
         projectDuration
         portion
       }
@@ -75,7 +75,7 @@ test.serial('DaySummariesQ returns summaries structure', async (t) => {
     t.truthy(Array.isArray(daySummary.projectSummaries))
     daySummary.projectSummaries.forEach((projectSummary) => {
       t.truthy(typeof projectSummary.portion === 'number')
-      t.truthy(typeof projectSummary.id === 'number')
+      t.truthy(typeof projectSummary.id === 'string')
       t.truthy(typeof projectSummary.projectDuration === 'number')
     })
   })

@@ -9,7 +9,7 @@ const DocMap = {
       )
         return 'Entry'
       if (
-        doc.hasOwnProperty('tagName')
+        doc.hasOwnProperty('name')
       )
         return 'Tag'
 

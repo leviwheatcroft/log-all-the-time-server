@@ -40,7 +40,7 @@ const DaySummariesQ = createResolver(
     $entries.forEach(({ Project, date, duration }) => {
       const {
         id: projectSummaryId,
-        projectName
+        name
       } = Project
 
       // get daySummary
@@ -59,7 +59,7 @@ const DaySummariesQ = createResolver(
       if (!daySummary.projectSummariesById[projectSummaryId]) {
         daySummary.projectSummariesById[projectSummaryId] = {
           id: `${daySummaryId}-${projectSummaryId}`,
-          projectName,
+          name,
           projectDuration: 0
         }
       }

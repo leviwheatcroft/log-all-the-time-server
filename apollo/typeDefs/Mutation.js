@@ -3,7 +3,7 @@ const gql = require('graphql-tag')
 const Mutation = gql`
 type Mutation {
   UserRegisterM(
-    username: String!
+    name: String!
     password: String!
     email: String!
   ): Tokens!

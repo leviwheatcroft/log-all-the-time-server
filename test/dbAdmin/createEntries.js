@@ -40,14 +40,14 @@ async function createEntries (opts) {
       EntryCreateM(entry: $entry) {
         id
         user {
-          username
+          name
         }
         description
         date
         duration
         tags {
           id
-          tagName
+          name
         }
       }
     }
@@ -71,13 +71,13 @@ async function createEntries (opts) {
     const idxA = Math.floor(Math.random() * tagSetA.length)
     const idxB = Math.floor(Math.random() * tagSetB.length)
     return [
-      { tagName: tagSetA[idxA] },
-      { tagName: tagSetB[idxB] }
+      { name: tagSetA[idxA] },
+      { name: tagSetB[idxB] }
     ]
   }
   function project () {
     const idx = Math.floor(Math.random() * projectSet.length)
-    return { projectName: projectSet[idx] }
+    return { name: projectSet[idx] }
   }
   function duration () {
     return Math.floor(Math.random() * 60)

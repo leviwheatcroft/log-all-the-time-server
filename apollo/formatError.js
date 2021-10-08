@@ -14,6 +14,7 @@ const reportableErrors = [
 
 // quiet is used when running tests. not used by apollo server
 function formatError (err, quiet) {
+  // console.log(err)
   const {
     message,
     path,

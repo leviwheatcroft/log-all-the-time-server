@@ -17,7 +17,7 @@ const TagPartialQ = createResolver(
     let tags = await Tag.findAll({
       where: {
         TeamId,
-        tagName: {
+        name: {
           // escape all the things
           // https://stackoverflow.com/a/35478115/441930
           [Op.iRegexp]: tagPartial.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')

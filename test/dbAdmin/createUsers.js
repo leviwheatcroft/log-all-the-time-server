@@ -22,7 +22,7 @@ const pc = require('../../lib/prettyConsole')
 async function createUser (opts) {
   const {
     count = 1,
-    username = false
+    name = false
   } = opts
   const timer = new pc.Timer()
   pc.line()
@@ -33,12 +33,12 @@ async function createUser (opts) {
 
   const UserRegisterM = gql`
     mutation UserRegisterM(
-        $username: String!
+        $name: String!
         $password: String!
         $email: String!
       ) {
       UserRegisterM(
-        username: $username
+        name: $name
         password: $password
         email: $email
       ) {
@@ -48,18 +48,19 @@ async function createUser (opts) {
     }
   `
 
-  const uniqueUserName = _uniqueRandomWord(username)
+  const uniqueUserName = _uniqueRandomWord(name)
   for (let i = 0; i < count; i += 1) {
-    const user = uniqueUserName.next().value
+    const name = uniqueUserName.next().value
     await mutate({
       mutation: UserRegisterM,
       variables: {
-        username: user,
-        email: `${user}@email.com`,
-        password: user
+        name,
+        email: `${name}@email.com`,
+        password: name
       }
     })
-    pc.wh(`created: ${user}`)
+
+    pc.wh(`created: ${name}`)
   }
 
   pc.wh(`this op took: ${timer.elapsed()}`)

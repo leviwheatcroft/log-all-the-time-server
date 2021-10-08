@@ -1,6 +1,6 @@
 /* ================================================================== fixture ==
 rm db.sqlite && \
-node test/dbAdmin/createUsers.js --username=test && \
+node test/dbAdmin/createUsers.js --name=test && \
 sqlite3 db.sqlite '.dump' > test/002\ mutations/002.002.sql
 */
 

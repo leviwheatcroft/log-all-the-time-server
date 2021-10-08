@@ -21,7 +21,7 @@ const User = {
     passwordResetExpires: {
       type: DataTypes.DATE
     },
-    username: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -32,6 +32,10 @@ const User = {
     adminGrant: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     },
     gravatar: {
       type: DataTypes.VIRTUAL,

@@ -2,7 +2,7 @@ async function findCreateUnarchive (project, ctx) {
   const Project = this
   const {
     id,
-    projectName
+    name
   } = project
   const {
     user: {
@@ -12,7 +12,7 @@ async function findCreateUnarchive (project, ctx) {
 
   const [$project] = await Project.upsert({
     ...id ? { id } : {},
-    projectName,
+    name,
     TeamId,
     archived: false
   })

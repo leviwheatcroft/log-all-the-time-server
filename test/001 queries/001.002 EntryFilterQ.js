@@ -1,6 +1,6 @@
 /* ================================================================== fixture ==
 rm db.sqlite && \
-node test/dbAdmin/createUsers.js --username=test --count=12 && \
+node test/dbAdmin/createUsers.js --name=test --count=12 && \
 node test/dbAdmin/createEntries.js --count=256 && \
 sqlite3 db.sqlite '.dump' > test/001\ queries/001.002.sql
 */
@@ -60,15 +60,15 @@ const EntryFilterQ = gql`
         id
         project {
           id,
-          projectName
+          name
         }
         tags {
           id
-          tagName
+          name
         }
         user {
           id
-          username
+          name
         }
       }
     }

@@ -4,7 +4,7 @@ const { toGql } = require('./toGql')
 
 const Project = {
   fields: {
-    projectName: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },

@@ -3,7 +3,7 @@ const gql = require('graphql-tag')
 const Project = gql`
 type Project {
   id: Int!
-  projectName: String!
+  name: String!
   archived: Boolean
 }
 `

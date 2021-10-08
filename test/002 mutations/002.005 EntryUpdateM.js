@@ -1,6 +1,6 @@
 /* ================================================================== fixture ==
 rm db.sqlite && \
-node test/dbAdmin/createUsers.js --username=test && \
+node test/dbAdmin/createUsers.js --name=test && \
 node test/dbAdmin/createEntries.js --count=1 && \
 sqlite3 db.sqlite '.dump' > test/002\ mutations/002.005.sql
 */
@@ -44,15 +44,15 @@ const EntryUpdateM = gql`
       id
       project {
         id
-        projectName
+        name
       }
       tags {
         id
-        tagName
+        name
       }
       user {
         id
-        username
+        name
         gravatar
       }
     }
@@ -132,7 +132,7 @@ test.serial('EntryUpdateM new project', async (t) => {
         date,
         duration,
         project: {
-          projectName: 'new project'
+          name: 'new project'
         },
         tags
       }
@@ -140,10 +140,10 @@ test.serial('EntryUpdateM new project', async (t) => {
   })
   const updatedEntry = result.data.EntryUpdateM
 
-  t.truthy(updatedEntry.project.projectName === 'new project')
+  t.truthy(updatedEntry.project.name === 'new project')
 
   const $project = await Project.findOne({
-    where: { projectName: 'new project' }
+    where: { name: 'new project' }
   })
   t.truthy($project)
 })
@@ -160,7 +160,7 @@ test.serial('EntryUpdateM new tag', async (t) => {
   } = entry.toGql()
 
   tags.pop()
-  tags.push({ tagName: 'new tag' })
+  tags.push({ name: 'new tag' })
 
   const result = await mutate({
     mutation: EntryUpdateM,
@@ -177,10 +177,10 @@ test.serial('EntryUpdateM new tag', async (t) => {
   })
   const updatedEntry = result.data.EntryUpdateM
 
-  t.truthy(updatedEntry.tags.some(({ tagName }) => tagName === 'new tag'))
+  t.truthy(updatedEntry.tags.some(({ name }) => name === 'new tag'))
 
   const $tag = await Tag.findOne({
-    where: { tagName: 'new tag' }
+    where: { name: 'new tag' }
   })
   t.truthy($tag)
 })

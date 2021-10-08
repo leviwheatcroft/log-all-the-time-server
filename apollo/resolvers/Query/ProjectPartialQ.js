@@ -17,7 +17,7 @@ const ProjectPartialQ = createResolver(
     let projects = await Project.findAll({
       where: {
         TeamId,
-        projectName: {
+        name: {
           // escape all the things
           // https://stackoverflow.com/a/35478115/441930
           [Op.iRegexp]: projectPartial.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')

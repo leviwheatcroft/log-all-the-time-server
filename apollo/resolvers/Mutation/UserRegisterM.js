@@ -15,7 +15,7 @@ const UserRegisterM = createResolver(
     const {
       email,
       password,
-      username
+      name
     } = query
     let user = await User.findOne({ where: { email } })
 
@@ -32,7 +32,7 @@ const UserRegisterM = createResolver(
 
     const active = true
     if (user) {
-      Object.assign(user, { username, password, active })
+      Object.assign(user, { name, password, active })
     } else {
       const TeamId = team.get('id')
       user = User.build({
@@ -40,7 +40,7 @@ const UserRegisterM = createResolver(
         email,
         password,
         TeamId,
-        username
+        name
       })
     }
 

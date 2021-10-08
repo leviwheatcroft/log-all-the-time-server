@@ -2,12 +2,12 @@ function toGql () {
   const $project = this
   const {
     id,
-    projectName,
+    name,
     archived
   } = $project
   return {
     id,
-    projectName,
+    name,
     archived
   }
 }

@@ -24,12 +24,12 @@ test.beforeEach((t) => setApolloContext({ squelchErrors: true }))
 
 const UserRegisterM = gql`
   mutation UserRegisterM(
-    $username: String!
+    $name: String!
     $email: String!
     $password: String!
   ) {
     UserRegisterM(
-      username: $username
+      name: $name
       email: $email
       password: $password
     ) {
@@ -43,7 +43,7 @@ test.serial('UserRegisterM create new user', async (t) => {
   const result = await mutate({
     mutation: UserRegisterM,
     variables: {
-      username: 'test',
+      name: 'test',
       email: 'test@email.com',
       password: 'test'
     }
@@ -54,14 +54,14 @@ test.serial('UserRegisterM create new user', async (t) => {
   const user = await User.findOne()
   t.truthy(user)
   t.is(user.active, true)
-  t.is(user.username, 'test')
+  t.is(user.name, 'test')
 })
 
 test.serial('UserRegisterM email collision', async (t) => {
   const result = await mutate({
     mutation: UserRegisterM,
     variables: {
-      username: 'test2',
+      name: 'test2',
       email: 'test@email.com',
       password: 'test'
     }
@@ -78,7 +78,7 @@ test.serial('UserRegisterM reactivate user', async (t) => {
   const result = await mutate({
     mutation: UserRegisterM,
     variables: {
-      username: 'test2',
+      name: 'test2',
       email: 'test@email.com',
       password: 'test'
     }
@@ -100,5 +100,5 @@ test.serial('UserRegisterM store hashed password', async (t) => {
 
 test.serial('UserRegisterM gravatar', async (t) => {
   const user = await User.findOne()
-  t.regex(user.getGravatar(), /gravatar.*retro/)
+  t.regex(user.gravatar, /gravatar.*retro/)
 })

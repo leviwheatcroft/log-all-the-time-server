@@ -3,7 +3,7 @@ const gql = require('graphql-tag')
 const ProjectSummary = gql`
 type ProjectSummary {
   id: String!
-  projectName: String!
+  name: String!
   projectDuration: Int!
   portion: Float!
 }
