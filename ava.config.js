@@ -2,13 +2,14 @@
 
 export default {
   files: [
-    // 'test/001 queries/001.002 EntryFilterQ.js',
+    'test/001 queries/001.002 EntryFilterQ.js',
     // 'test/001 queries/001.003 DaySummariesQ.js',
     // 'test/002 mutations/002.001 UserRegisterM.js',
     // 'test/002 mutations/002.002 UserLoginM.js',
-    'test/002 mutations/002.003 UserRefreshM.js',
-    'test/002 mutations/002.004 EntryCreateM.js',
-    'test/002 mutations/002.005 EntryUpdateM.js',
+    // 'test/002 mutations/002.003 UserRefreshM.js',
+    // 'test/002 mutations/002.004 EntryCreateM.js',
+    // 'test/002 mutations/002.005 EntryUpdateM.js',
+    // 'test/009 misc/009.001 SqlQueryAssociation.js'
   ],
   environmentVariables: {
     JWT_SECRET: 'secretJwtEncryptionKey',

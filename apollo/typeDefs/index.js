@@ -13,6 +13,7 @@ const { ProjectI } = require('./ProjectI')
 const { Token } = require('./Token')
 const { Tokens } = require('./Tokens')
 const { User } = require('./User')
+const { UserI } = require('./UserI')
 const { Doc } = require('./Doc')
 const { ProjectSummary } = require('./ProjectSummary')
 const { DaySummary } = require('./DaySummary')
@@ -37,6 +38,7 @@ const typeDefs = [
   Token,
   Tokens,
   User,
+  UserI,
   Doc
 ]
 

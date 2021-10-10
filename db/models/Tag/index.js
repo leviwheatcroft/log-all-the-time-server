@@ -21,7 +21,7 @@ const Tag = {
     }
   },
   options: {
-    paranoid: true,
+    // paranoid: true,
   },
   staticMethods: {
     findCreateUnarchive,

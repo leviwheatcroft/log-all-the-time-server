@@ -28,8 +28,17 @@ async function createEntries (opts) {
   const {
     count = 24,
     tagSetCount = 10,
-    projectSetCount = 3
+    projectSetCount = 3,
+    yesReally = false
   } = opts
+
+  if (process.env.SEQUELIZE_DIALECT !== 'sqlite' && !yesReally) {
+    console.error('targetting postgres db at:')
+    console.error(process.env.SEQUELIZE_HOST)
+    console.error('if you really want to do this you need to add the flag')
+    console.error('--yesReally')
+    throw new Error('molly guard')
+  }
   const timer = new pc.Timer()
   pc.line()
   pc.bl('starting db')

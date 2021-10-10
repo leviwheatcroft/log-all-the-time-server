@@ -25,18 +25,28 @@ function withIncludes (query = {}, ctx = {}) {
   return {
     ...query,
     include: [
-      ...tags !== false ? [{
-        model: EntryTag,
-        ...Array.isArray(tags) ? {
-          where: {
-            TagId: { [Op.in]: tags.map(({ id }) => id) }
-          },
-          required: true
-        } : {},
-        include: {
-          model: Tag
+      ...tags !== false ? [
+        {
+          model: EntryTag,
+          include: {
+            model: Tag
+          }
         }
-      }] : [],
+      ] : [],
+      // ...tags !== false ? [
+      //   {
+      //     model: EntryTag,
+      //     ...Array.isArray(tags) ? {
+      //       where: {
+      //         TagId: { [Op.in]: tags }
+      //       },
+      //       required: true
+      //     } : {},
+      //     include: {
+      //       model: Tag
+      //     }
+      //   }
+      // ] : [],
       ...user ? [{
         model: User
       }] : [],

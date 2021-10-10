@@ -13,6 +13,7 @@ const {
   db: {
     sqlUp,
     Entry,
+    Project,
     User
   },
   apollo: { query, setApolloContext }
@@ -34,21 +35,19 @@ const EntryFilterQ = gql`
     $dateTo: DateMidnightUtc
     $limit: Int
     $offset: Int
-    $self: Boolean
     $order: OrderI
-    $project: Int
-    $tags: [Int!]
-    $users: [Int!]
+    $projects: [ProjectI]
+    $tags: [TagI]
+    $users: [UserI]
     ) {
     EntryFilterQ(
       dateFrom: $dateFrom
       dateTo: $dateTo
       limit: $limit
       offset: $offset
-      self: $self
       order: $order
       tags: $tags
-      project: $project
+      projects: $projects
       users: $users
     ) {
     docs {
@@ -96,36 +95,32 @@ test.serial('EntryFilterQ filter for single day', async (t) => {
 })
 
 test.serial('EntryFilterQ filter by user', async (t) => {
-  const {
-    UserId
-  } = await Entry.findOne()
+  const $user = await User.findOne()
 
   const result = await query({
     query: EntryFilterQ,
     variables: {
-      users: [UserId]
+      users: [$user.toGql()]
     }
   })
   const { docs: entries } = result.data.EntryFilterQ
   t.truthy(entries.length > 0)
-  t.truthy(entries.every((e) => e.user.id === UserId))
+  t.truthy(entries.every((e) => e.user.id === $user.id))
   const totalDocs = await Entry.count()
   t.truthy(entries.length < totalDocs)
 })
 
 test.serial('EntryFilterQ no dates', async (t) => {
-  const {
-    UserId
-  } = await Entry.findOne()
+  const $user = await User.findOne()
   const count = await Entry.count({
-    where: { UserId }
+    where: { UserId: $user.id }
   })
   const result = await query({
     query: EntryFilterQ,
     variables: {
       dateFrom: null,
       dateTo: null,
-      users: [UserId],
+      users: [$user.toGql()],
       limit: 256
     }
   })
@@ -134,21 +129,39 @@ test.serial('EntryFilterQ no dates', async (t) => {
 })
 
 test.serial('EntryFilterQ project', async (t) => {
-  const {
-    ProjectId
-  } = await Entry.findOne()
+  const $project = await Project.findOne()
   const count = await Entry.count({
-    where: { ProjectId }
+    where: { ProjectId: $project.id }
   })
   const result = await query({
     query: EntryFilterQ,
     variables: {
-      project: ProjectId,
+      projects: [$project.toGql()],
       limit: 256
     }
   })
   const { docs: entries } = result.data.EntryFilterQ
   t.truthy(entries.length === count)
+})
+
+test.serial('EntryFilterQ tags', async (t) => {
+  const $entry = await Entry.findOne(Entry.withIncludes())
+
+  const result = await query({
+    query: EntryFilterQ,
+    variables: {
+      tags: $entry.EntryTags.map(($eT) => $eT.Tag.toGql())
+    }
+  })
+  const {
+    docs: entries
+  } = result.data.EntryFilterQ
+
+  const tagIds = $entry.EntryTags.map(($eT) => $eT.Tag.toGql().id)
+  t.truthy(entries.every((e) => {
+    const entryTagIds = e.tags.map(({ id }) => id)
+    return entryTagIds.some((id) => tagIds.includes(id))
+  }))
 })
 
 test.serial('EntryFilterQ paging', async (t) => {
@@ -179,23 +192,11 @@ test.serial('EntryFilterQ paging', async (t) => {
   t.truthy(first12.every((e, i) => e.id === all24[i].id))
   t.truthy(last12.every((e, i) => e.id === all24[i + 12].id))
 })
-test.serial('EntryFilterQ self', async (t) => {
-  const result = await query({
-    query: EntryFilterQ,
-    variables: {
-      self: true
-    }
-  })
-  const {
-    docs: entries
-  } = result.data.EntryFilterQ
-  t.truthy(entries.every((e) => e.user.id === t.context.user.id))
-})
+
 test.serial('EntryFilterQ sort by createdAt desc', async (t) => {
   const result = await query({
     query: EntryFilterQ,
     variables: {
-      self: true,
       order: { createdAt: 'desc' }
     }
   })
@@ -210,11 +211,11 @@ test.serial('EntryFilterQ sort by createdAt desc', async (t) => {
     return true
   }))
 })
+
 test.serial('EntryFilterQ sort by createdAt asc', async (t) => {
   const result = await query({
     query: EntryFilterQ,
     variables: {
-      self: true,
       order: { createdAt: 'asc' }
     }
   })
@@ -229,11 +230,11 @@ test.serial('EntryFilterQ sort by createdAt asc', async (t) => {
     return true
   }))
 })
+
 test.serial('EntryFilterQ sort by date desc', async (t) => {
   const result = await query({
     query: EntryFilterQ,
     variables: {
-      self: true,
       order: { date: 'desc' }
     }
   })
@@ -248,11 +249,11 @@ test.serial('EntryFilterQ sort by date desc', async (t) => {
     return true
   }))
 })
+
 test.serial('EntryFilterQ sort by date asc', async (t) => {
   const result = await query({
     query: EntryFilterQ,
     variables: {
-      self: true,
       order: { date: 'asc' }
     }
   })

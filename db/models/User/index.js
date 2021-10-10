@@ -51,7 +51,7 @@ const User = {
     }
   },
   options: {
-    paranoid: true,
+    // paranoid: true,
     hooks: {
       async beforeSave (user, options) {
         if (user.changed('password')) {

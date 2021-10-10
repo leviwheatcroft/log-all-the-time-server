@@ -4,6 +4,7 @@ const {
 const {
   User,
   Entry,
+  EntryTag,
   Team,
   Project,
   Tag,
@@ -29,6 +30,7 @@ async function sqlUp (dump) {
 module.exports = {
   User,
   Entry,
+  EntryTag,
   Team,
   Project,
   Tag,

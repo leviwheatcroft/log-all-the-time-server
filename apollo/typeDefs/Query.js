@@ -15,9 +15,9 @@ type Query {
     limit: Int
     offset: Int
     self: Boolean
-    project: Int
-    tags: [Int!]
-    users: [Int!]
+    projects: [ProjectI]
+    tags: [TagI]
+    users: [UserI]
     order: OrderI
   ): Page
   DaySummariesQ(

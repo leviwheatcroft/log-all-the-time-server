@@ -18,7 +18,7 @@ const Entry = {
     },
   },
   options: {
-    paranoid: true,
+    // paranoid: true,
   },
   staticMethods: {
     withIncludes
