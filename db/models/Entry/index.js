@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize')
 const { toGql } = require('./toGql')
 const { withIncludes } = require('./withIncludes')
+const { findAllStream } = require('./findAllStream')
 const { associateTags } = require('./associateTags')
 
 const Entry = {
@@ -21,7 +22,8 @@ const Entry = {
     // paranoid: true,
   },
   staticMethods: {
-    withIncludes
+    withIncludes,
+    findAllStream
   },
   instanceMethods: {
     associateTags,

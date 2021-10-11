@@ -12,14 +12,24 @@ type Query {
   EntryFilterQ(
     dateFrom: DateMidnightUtc
     dateTo: DateMidnightUtc
-    limit: Int
     offset: Int
-    self: Boolean
     projects: [ProjectI]
     tags: [TagI]
     users: [UserI]
     order: OrderI
+    limit: Int
   ): Page
+  EntryFilterAsCsvQ(
+    dateFrom: DateMidnightUtc
+    dateTo: DateMidnightUtc
+    dateFormat: String
+    durationFormat: String
+    projects: [ProjectI]
+    tags: [TagI]
+    users: [UserI]
+    order: OrderI
+    limit: Int
+  ): String!
   DaySummariesQ(
     dateFrom: DateMidnightUtc
     dateTo: DateMidnightUtc
