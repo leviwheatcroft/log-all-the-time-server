@@ -39,10 +39,10 @@ const EntryFilterQ = createResolver(
         tags.length ? Sequelize.literal(`
           EXISTS(
             SELECT *
-            FROM EntryTags
+            FROM "EntryTags"
             WHERE
-              EntryTags.EntryId = Entry.id AND
-              EntryTags.TagId IN (${tagIds.join(',')})
+              "EntryTags"."EntryId" = "Entry"."id" AND
+              "EntryTags"."TagId" IN (${tagIds.join(',')})
           )
         `) : {},
         dateFrom || dateTo ? {
