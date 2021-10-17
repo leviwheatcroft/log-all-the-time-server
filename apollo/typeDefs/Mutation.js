@@ -20,6 +20,12 @@ type Mutation {
   EntryUpdateM(
     entry: EntryI!
   ): Entry!
+  TagUpdateM(
+    tag: TagI
+  ): Tag!
+  ProjectUpdateM(
+    project: ProjectI!
+  ): Project!
 }
 `
 

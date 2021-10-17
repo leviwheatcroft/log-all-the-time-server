@@ -5,10 +5,14 @@ type Query {
   SelfQ: User!
   TagPartialQ(
     tagPartial: String
-  ): [Tag]!
+    limit: Int
+    offset: Int
+  ): Page
   ProjectPartialQ(
     projectPartial: String
-  ): [Project]!
+    limit: Int
+    offset: Int
+  ): Page
   EntryFilterQ(
     dateFrom: DateMidnightUtc
     dateTo: DateMidnightUtc

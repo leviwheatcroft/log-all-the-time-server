@@ -116,10 +116,13 @@ async function createEntries (opts) {
       project: project()
     }
     setApolloContext({ user: user() })
+    const start = Date.now()
     const result = await mutate({
       mutation: EntryCreateM,
       variables: { entry }
     })
+    const elapsed = Date.now() - start
+    console.log(elapsed)
     table.push(result.data.EntryCreateM)
   }
 

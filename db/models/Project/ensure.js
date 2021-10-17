@@ -1,4 +1,4 @@
-async function findCreateUnarchive (project, ctx) {
+async function ensure (project, ctx) {
   const Project = this
   const {
     id,
@@ -11,17 +11,15 @@ async function findCreateUnarchive (project, ctx) {
   } = ctx
 
   let $project = await Project.findOne({
-    where: {
-      ...id ? { id } : {},
-      name,
-      TeamId
-    }
+    ...id ? { id } : {},
+    name,
+    TeamId
   })
 
   if ($project && !$project.get('archived'))
     return $project
 
-  if ($project && $project.get('archived')) {
+  if ($project.get('archived')) {
     $project.set('archived', false)
     await $project.save()
   } else {
@@ -34,4 +32,4 @@ async function findCreateUnarchive (project, ctx) {
   return $project
 }
 
-module.exports = { findCreateUnarchive }
+module.exports = { ensure }

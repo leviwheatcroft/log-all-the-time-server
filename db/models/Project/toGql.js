@@ -6,6 +6,7 @@ function toGql () {
     archived
   } = $project
   return {
+    __typename: 'Project',
     id,
     name,
     archived

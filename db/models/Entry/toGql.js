@@ -34,6 +34,7 @@ function toGql (mixins = {}) {
     throw new Error('Entry.toGql user not provided')
 
   return {
+    __typename: 'Entry',
     id,
     date,
     description,
