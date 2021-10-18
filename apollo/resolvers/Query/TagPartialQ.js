@@ -13,6 +13,7 @@ const TagPartialQ = createResolver(
       offset = 0,
       limit = 24,
       tagPartial = '',
+      includeArchived = false,
       order: _order = { name: 'desc', createdAt: 'desc' }
     } = query
     const {
@@ -27,6 +28,7 @@ const TagPartialQ = createResolver(
     const { count, rows } = await Tag.findAndCountAll({
       where: {
         TeamId,
+        ...includeArchived === false ? { archived: false } : {},
         // operators are dialect specific
         // https://sequelize.org/master/manual/model-querying-basics.html
         ...tagPartial && dialect === 'sqlite' ? {

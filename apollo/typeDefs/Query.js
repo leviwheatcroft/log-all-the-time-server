@@ -7,11 +7,13 @@ type Query {
     tagPartial: String
     limit: Int
     offset: Int
+    includeArchived: Boolean
   ): Page
   ProjectPartialQ(
     projectPartial: String
     limit: Int
     offset: Int
+    includeArchived: Boolean
   ): Page
   EntryFilterQ(
     dateFrom: DateMidnightUtc

@@ -13,6 +13,7 @@ const ProjectPartialQ = createResolver(
       offset = 0,
       limit = 24,
       projectPartial = '',
+      includeArchived = false,
       order: _order = { name: 'desc', createdAt: 'desc' }
     } = query
     const {
@@ -27,6 +28,7 @@ const ProjectPartialQ = createResolver(
     const { count, rows } = await Project.findAndCountAll({
       where: {
         TeamId,
+        ...includeArchived === false ? { archived: false } : {},
         // operators are dialect specific
         // https://sequelize.org/master/manual/model-querying-basics.html
         ...projectPartial && dialect === 'sqlite' ? {
