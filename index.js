@@ -22,17 +22,15 @@ async function startServer () {
 
   app.use(express.static(process.env.CLIENT_PATH))
 
-  const {
-    url,
-    server
-  } = await apolloListen()
+  const server = await apolloListen()
 
   server.applyMiddleware({ app })
   await Promise.all([
     new Promise((resolve) => app.listen({ port: 4000 }, resolve)),
     dbInitialised
   ])
-  info(`🚀  GraphQL ready at ${url}${server.graphqlPath}`)
+  // info(`🚀  GraphQL ready at ${url}${server.graphqlPath}`)
+  info(`🚀  GraphQL ready at http::/localhost:4000${server.graphqlPath}`)
 }
 
 startServer()

@@ -13,7 +13,7 @@ let instance
  * this fn is unusual in that it's not declared as an `async` function, but
  * it still returns a promise, therefore it can be called with `await lsiten()`
  */
-function apolloListen (options = {}) {
+async function apolloListen (options = {}) {
   const {
     includeMiddlewares = true
   } = options
@@ -29,14 +29,10 @@ function apolloListen (options = {}) {
     return { req }
   }
 
-  const server = new ApolloServer({ schema, context, formatError })
+  instance = new ApolloServer({ schema, context, formatError })
 
-  instance = server.listen().then(({ url }) => {
-    return {
-      url,
-      server
-    }
-  })
+  await instance.start()
+
   return instance
 }
 
