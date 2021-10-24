@@ -22,21 +22,14 @@ const connectionParams = {
   password: process.env.SEQUELIZE_PASSWORD,
   database: process.env.SEQUELIZE_DATABASE,
   dialect: process.env.SEQUELIZE_DIALECT,
-  storage: process.env.SEQUELIZE_STORAGE,
-  logging
+  storage: process.env.SEQUELIZE_STORAGE
 }
 
-console.log({
-  host: process.env.SEQUELIZE_HOST,
-  port: process.env.SEQUELIZE_PORT,
-  username: process.env.SEQUELIZE_USERNAME,
-  password: process.env.SEQUELIZE_PASSWORD,
-  database: process.env.SEQUELIZE_DATABASE,
-  dialect: process.env.SEQUELIZE_DIALECT,
-  storage: process.env.SEQUELIZE_STORAGE,
-})
+if (['silly', 'debug', 'verbose'].includes(process.env.LOG_LEVEL_CONSOLE))
+  // eslint-disable-next-line no-console
+  console.log('sequelize connection params:', connectionParams)
 
-const sequelize = new Sequelize(connectionParams)
+const sequelize = new Sequelize({ ...connectionParams, logging })
 
 Object.entries(modelDefinitions).map(([name, definition]) => {
   const {

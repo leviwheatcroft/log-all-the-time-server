@@ -1,3 +1,11 @@
+/**
+ *
+ * ## Error Reporting
+ * Errors are handled both on the server and in the client
+ * NODE_ENV is not relevant to what information should be reported, because
+ * the server is always private and can log sensitive information.
+*/
+
 // const tml = require('../lib/tml')
 const {
   error,
