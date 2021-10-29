@@ -8,83 +8,38 @@
 
 // const tml = require('../lib/tml')
 const {
-  error,
-  verbose
-} = require('../lib/log')
+  formatError: formatApolloError,
+  isInstance: isApolloErrorInstance
+} = require('apollo-errors')
 const {
-  rd
-} = require('../lib/prettyConsole')
-
-const reportableErrors = [
-  'INTERNAL_SERVER_ERROR',
-  'GRAPHQL_VALIDATION_FAILED'
-]
+  error,
+  verbose,
+  // verbose
+} = require('../lib/log')
 
 // quiet is used when running tests. not used by apollo server
 function formatError (err, quiet) {
-  // console.log(err)
-  const {
-    message,
-    path,
-    extensions: {
-      code,
-      data,
-      exposedData,
-      exception: {
-        stacktrace,
-        sql
-      }
-    }
-  } = err
+  if (quiet)
+    return formatApolloError(err)
 
-  if (!quiet) {
-    const meta = {
-      code,
-      data,
-      exposedData,
-      path
-    }
-    if (reportableErrors.includes(code)) {
-      error(message, meta)
-      // exception.stacktrace requires debug: true in apollo server constructor
-      // eslint-disable-next-line no-console
-      if (sql)
-        rd(sql)
-      stacktrace.forEach((line) => rd(line))
-      // console.error('stack', exception.stacktrace)
-      // if (process.env.NODE_ENV === 'test')
-    } else {
-      verbose(message, meta)
-    }
-    // tml.line()
-    // tml.bl(`Error Code: ${code}`)
-    // if (path)
-    //   tml.wh(`Path: ${path}`)
-    //
-    // if (code === 'INTERNAL_SERVER_ERROR') {
-    //   tml.wh(`Message: ${error.message}`)
-    //   tml.wh('extensions.exception.stacktrace')
-    //   console.info(exception.stacktrace)
-    // }
-    //
-    // if (code === 'GRAPHQL_VALIDATION_FAILED')
-    //   tml.wh(`Message: ${error.message}`)
-    //
-    // if (data) {
-    //   tml.wh('extensions.data:')
-    //   console.info(data)
-    // }
-    // if (exposedData) {
-    //   tml.wh('extensions.exposedData:')
-    //   console.info(exposedData)
-    // }
-  }
+  const { originalError } = err
 
-  return {
-    message,
-    code,
-    exposedData
+  if (isApolloErrorInstance(originalError)) {
+    // these are the nice errors which can be handled by the client
+    const {
+      name,
+    } = originalError
+    verbose(`Returned Error: ${name}`)
+  } else {
+    // these are the nasty untrapped errors
+    const {
+      name,
+      stack
+    } = originalError
+    error(`Threw Unexpected Error: ${name}`)
+    error(stack)
   }
+  return formatApolloError(err)
 }
 
 module.exports = {

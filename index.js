@@ -7,7 +7,7 @@ const {
   apolloListen
 } = require('./apollo')
 const {
-  dbInitialised
+  sqlInitialised
 } = require('./db')
 
 // Promise.all([apolloListen(), dbInitialised]).then(([{ url }]) => {
@@ -25,12 +25,19 @@ async function startServer () {
   const server = await apolloListen()
 
   server.applyMiddleware({ app })
-  await Promise.all([
-    new Promise((resolve) => app.listen({ port: 4000 }, resolve)),
-    dbInitialised
-  ])
+
+  info(' ✔ Express configured')
+
+  await sqlInitialised
+
+  info(' ✔ Sequelize configured & connected')
+
+  await new Promise((resolve) => app.listen({ port: 4000 }, resolve))
+
+  info(' ✔ Express listening')
+
   // info(`🚀  GraphQL ready at ${url}${server.graphqlPath}`)
-  info(`🚀  GraphQL ready at http::/localhost:4000${server.graphqlPath}`)
+  info(`🚀  GraphQL ready at http://localhost:4000${server.graphqlPath}`)
 }
 
 startServer()

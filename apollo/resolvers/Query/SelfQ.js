@@ -8,7 +8,6 @@ const SelfQ = createResolver(
       user
     } = ctx
 
-    console.log(user)
     return user
   }
 )

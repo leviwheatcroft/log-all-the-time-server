@@ -1,5 +1,6 @@
 const {
-  Sequelize
+  Sequelize,
+  ConnectionError
 } = require('sequelize')
 
 const modelDefinitions = require('./models')
@@ -24,10 +25,6 @@ const connectionParams = {
   dialect: process.env.SEQUELIZE_DIALECT,
   storage: process.env.SEQUELIZE_STORAGE
 }
-
-if (['silly', 'debug', 'verbose'].includes(process.env.LOG_LEVEL_CONSOLE))
-  // eslint-disable-next-line no-console
-  console.log('sequelize connection params:', connectionParams)
 
 const sequelize = new Sequelize({ ...connectionParams, logging })
 
@@ -57,9 +54,14 @@ sequelize.authenticate()
       return sequelize.sync()
   })
   .then(() => sqlInitialisedResolver(sequelize))
-  .catch((err) => {
-    console.error(err)
-    throw err
+  .catch((error) => {
+    if (error instanceof ConnectionError) {
+      console.error('Database Connection Error')
+      console.error('sequelize connection params:', connectionParams)
+    } else {
+      console.error(error)
+      throw error
+    }
   })
 
 module.exports = {

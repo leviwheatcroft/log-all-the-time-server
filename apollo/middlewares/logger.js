@@ -12,7 +12,6 @@ async function logger (resolve, root, args, ctx, info) {
   const {
     fieldName
   } = info
-
   const result = await resolve(root, args, ctx, info)
 
   if (process.env.NODE_ENV !== 'production') {

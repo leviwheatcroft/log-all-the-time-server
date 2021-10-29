@@ -1,4 +1,4 @@
-const { AUTH_UNAUTHORIZED } = require('../../lib/errors')
+const { AuthUnauthorizedError } = require('../../lib/errors')
 const { authWhitelist } = require('./authWhitelist')
 
 const adminRequired = []
@@ -11,13 +11,23 @@ async function authorization (resolve, root, args, ctx, info) {
   if (
     (!authWhitelist.includes(fieldName)) &&
     (!ctx.jwt || !ctx.jwt.grants.basic)
-  )
-    throw new AUTH_UNAUTHORIZED()
+  ) {
+    throw new AuthUnauthorizedError({
+      internalData: {
+        detail: 'User does not have basic grant'
+      }
+    })
+  }
   if (
     (adminRequired.includes(fieldName)) &&
     (!ctx.jwt || !ctx.jwt.grants.admin)
-  )
-    throw new AUTH_UNAUTHORIZED()
+  ) {
+    throw new AuthUnauthorizedError({
+      internalData: {
+        detail: 'User does not have admin grant'
+      }
+    })
+  }
 
   const result = await resolve(root, args, ctx, info)
 

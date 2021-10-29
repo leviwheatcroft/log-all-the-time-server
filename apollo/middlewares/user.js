@@ -19,10 +19,12 @@ async function user (resolve, root, args, ctx, info) {
     } = jwt
     const user = await User.findOne({ where: { id: userId } })
     if (!user) {
-      throw new AuthFailedError(
-        'Token User does not exist.',
-        { data: { user } }
-      )
+      throw new AuthFailedError({
+        internalData: {
+          detail: 'Token User does not exist',
+          user
+        }
+      })
     }
     ctx.user = user.get()
   }

@@ -20,10 +20,10 @@ const UserRegisterM = createResolver(
     let user = await User.findOne({ where: { email } })
 
     if (user && user.active) {
-      throw new NewUserError(
-        `User account for ${email} exists and is active`,
-        { data: { email } }
-      )
+      throw new NewUserError({
+        message: `User account for ${email} exists and is active`,
+        data: { email }
+      })
     }
 
     let team = await Team.findOne()

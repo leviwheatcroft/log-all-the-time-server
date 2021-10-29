@@ -14,11 +14,16 @@ async function authentication (resolve, root, args, ctx, info) {
   const {
     req
   } = ctx
+
   if (!authWhitelist.includes(fieldName)) {
     const authorizationHeader = req.get('authorization')
-    if (!authorizationHeader)
-      throw new AuthFailedError('No authorization header provided.')
-
+    if (!authorizationHeader) {
+      throw new AuthFailedError({
+        internalData: {
+          detail: 'No authorization header provided.'
+        }
+      })
+    }
     let token
     try {
       token = jwt.verify(
@@ -26,15 +31,18 @@ async function authentication (resolve, root, args, ctx, info) {
         JWT_SECRET
       )
     } catch (err) {
-      throw new AuthFailedError('Malformed token.')
+      throw new AuthFailedError({
+        internalData: {
+          detail: 'Malformed token.'
+        }
+      })
     }
-
     token.expiresAt = Date.parse(token.expiresAt)
 
     ctx.jwt = token
 
     if (ctx.jwt.expiresAt < Date.now())
-      throw new AuthAccessTimeoutError('Access token has timed out.')
+      throw new AuthAccessTimeoutError()
   }
 
   const result = await resolve(root, args, ctx, info)

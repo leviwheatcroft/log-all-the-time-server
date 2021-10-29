@@ -24,24 +24,24 @@ const UserLoginM = createResolver(
       }
     })
     if (!user) {
-      throw new AuthBadEmailError(
-        'There\'s no user with that email address',
-        { data: { email } }
-      )
+      throw new AuthBadEmailError({
+        message: 'There\'s no user with that email address.',
+        data: { email }
+      })
     }
 
     const passwordOk = await bcrypt.compare(password, user.get('password'))
 
     if (!passwordOk) {
-      throw new AuthBadPasswordError(
-        'That password is incorrect'
-      )
+      throw new AuthBadPasswordError({
+        message: 'That password is incorrect'
+      })
     }
 
     if (!user.active) {
-      throw new AuthInactiveUserError(
-        'This user account is inactive, you need to re-register'
-      )
+      throw new AuthInactiveUserError({
+        message: 'This user account is inactive, you need to re-register'
+      })
     }
 
     return getTokens(user.get())
