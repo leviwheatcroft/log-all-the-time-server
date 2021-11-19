@@ -8,12 +8,14 @@ type Query {
     limit: Int
     offset: Int
     includeArchived: Boolean
+    cacheBust: Int
   ): Page
   ProjectPartialQ(
     projectPartial: String
     limit: Int
     offset: Int
     includeArchived: Boolean
+    cacheBust: Int
   ): Page
   EntryFilterQ(
     dateFrom: DateMidnightUtc
