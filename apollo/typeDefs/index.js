@@ -18,6 +18,8 @@ const { Doc } = require('./Doc')
 const { ProjectSummary } = require('./ProjectSummary')
 const { DaySummary } = require('./DaySummary')
 const { DaySummaries } = require('./DaySummaries')
+const { Dialog } = require('./Dialog')
+const { Options } = require('./Options')
 
 const typeDefs = [
   // Duration,
@@ -39,7 +41,9 @@ const typeDefs = [
   Tokens,
   User,
   UserI,
-  Doc
+  Doc,
+  Dialog,
+  Options
 ]
 
 module.exports = {

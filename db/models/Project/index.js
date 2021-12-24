@@ -20,7 +20,7 @@ const Project = {
   staticMethods: {
     findCreateUnarchive
   },
-  associations ({ Project, Team, Entry }) {
+  afterInstantiate ({ Project, Team, Entry }) {
     Project.belongsTo(Team)
     Project.hasMany(Entry)
   }

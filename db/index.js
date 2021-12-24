@@ -44,9 +44,11 @@ Object.entries(modelDefinitions).map(([name, definition]) => {
   return [name, Model]
 })
 
-Object.values(modelDefinitions).forEach(({ associations }) => {
-  associations(sequelize.models)
-})
+Object.values(modelDefinitions)
+  .filter(({ afterInstantiate }) => afterInstantiate)
+  .forEach(({ afterInstantiate }) => {
+    afterInstantiate(sequelize.models)
+  })
 
 sequelize.authenticate()
   .then(() => {

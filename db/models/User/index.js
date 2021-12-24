@@ -65,8 +65,27 @@ const User = {
     comparePassword,
     toGql
   },
-  associations ({ User, Team }) {
+
+  afterInstantiate (models) {
+    const {
+      User,
+      Team,
+      UserOption,
+      UserDialog
+    } = models
+
     User.belongsTo(Team)
+    User.hasOne(UserOption)
+    User.hasOne(UserDialog)
+
+    User.addHook('afterCreate', async (user, options) => {
+      await UserOption.create({
+        UserId: user.id
+      })
+      await UserDialog.create({
+        UserId: user.id
+      })
+    })
   }
 }
 

@@ -1,14 +1,18 @@
 function toGql () {
-  const $project = this
+  const $user = this
   const {
     id,
     name,
-    gravatar
-  } = $project
+    gravatar,
+    UserDialog,
+    UserOption
+  } = $user
   return {
     id,
     name,
-    gravatar
+    gravatar,
+    ...UserDialog ? { dialogs: UserDialog.toGql() } : {},
+    ...UserOption ? { options: UserOption.toGql() } : {}
   }
 }
 

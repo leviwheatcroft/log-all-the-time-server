@@ -26,6 +26,10 @@ type Mutation {
   ProjectUpdateM(
     project: ProjectI!
   ): Project!
+  UserOptionM(
+    exportDateFormat: String
+    exportDurationFormat: String
+  ): Options!
 }
 `
 

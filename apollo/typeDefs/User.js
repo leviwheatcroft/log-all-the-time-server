@@ -5,6 +5,8 @@ type User {
   id: Int!
   name: String!
   gravatar: String!
+  dialogs: [Dialog]!
+  options: Options!
 }
 `
 

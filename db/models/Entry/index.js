@@ -29,7 +29,7 @@ const Entry = {
     associateTags,
     toGql
   },
-  associations (models) {
+  afterInstantiate (models) {
     const {
       Entry,
       EntryTag,

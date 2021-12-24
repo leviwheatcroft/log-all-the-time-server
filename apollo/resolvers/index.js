@@ -14,7 +14,7 @@ const resolvers = combineResolvers([
   DateMap,
   DateMidnightUtcMap,
   // ObjectIdMap,
-  DocMap
+  DocMap,
 ])
 
 module.exports = {

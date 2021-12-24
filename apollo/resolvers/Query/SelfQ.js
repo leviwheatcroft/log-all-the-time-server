@@ -1,14 +1,27 @@
 const {
   createResolver
 } = require('apollo-resolvers')
+const {
+  User,
+  UserDialog,
+  UserOption
+} = require('../../../db')
 
 const SelfQ = createResolver(
   async (root, query, ctx) => {
     const {
-      user
+      user: { id }
     } = ctx
 
-    return user
+    const user = await User.findOne({
+      where: { id },
+      include: [
+        { model: UserDialog },
+        { model: UserOption }
+      ]
+    })
+
+    return user.toGql()
   }
 )
 

@@ -7,7 +7,7 @@ const EntryTag = {
   staticMethods: {
     reconcile
   },
-  associations (models) {
+  afterInstantiate (models) {
     const {
       Entry,
       EntryTag,
