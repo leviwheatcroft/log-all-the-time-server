@@ -13,7 +13,8 @@ const {
   EntryTag,
   Tag,
   Project,
-  User
+  User,
+  UserOption
 } = require('../../../db')
 
 dayjs.extend(duration)
@@ -28,13 +29,21 @@ const EntryFilterAsCsvQ = createResolver(
       projects = [],
       tags = [],
       users = [],
-      order: _order = { date: 'desc', createdAt: 'desc' },
-      dateFormat = 'DD/MM/YY',
-      durationFormat = 'HH:mm'
+      order: _order = { date: 'desc', createdAt: 'desc' }
     } = query
     const {
       user
     } = ctx
+
+    const $user = await User.findOne({
+      where: { id: user.id },
+      include: [
+        { model: UserOption }
+      ]
+    })
+
+    const exportDateFormat = $user.UserOption.get('exportDateFormat')
+    const exportDurationFormat = $user.UserOption.get('exportDurationFormat')
 
     const projectIds = projects.map(({ id }) => id)
     const userIds = users.map(({ id }) => id)
@@ -92,8 +101,8 @@ const EntryFilterAsCsvQ = createResolver(
           EntryTags: $entryTags,
         } = chunk
         const row = [
-          dayjs(date).format(dateFormat),
-          dayjs.duration(duration * 60 * 1000).format(durationFormat),
+          dayjs(date).format(exportDateFormat),
+          dayjs.duration(duration * 60 * 1000).format(exportDurationFormat),
           $user.name,
           description,
           $project.name,

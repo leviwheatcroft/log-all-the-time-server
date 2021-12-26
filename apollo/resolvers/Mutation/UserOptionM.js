@@ -12,16 +12,13 @@ const UserOptionM = createResolver(
     const {
       user: { id }
     } = ctx
-
     const $userOption = await UserOption.findOne({ where: { UserId: id } })
-
     if (exportDateFormat)
       $userOption.exportDateFormat = exportDateFormat
     if (exportDurationFormat)
       $userOption.exportDurationFormat = exportDurationFormat
 
     await $userOption.save()
-
     return $userOption.toGql()
   }
 )
